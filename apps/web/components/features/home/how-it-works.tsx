@@ -7,7 +7,7 @@ const steps = [
     title: "Submit Your URL",
     description:
       "Drop your landing page, portfolio, or product link. No sign-up required. We take any publicly accessible URL.",
-    accent: "var(--accent-danger)",
+    accent: "varaccent-danger",
     glow: "rgba(255,78,78,0.15)",
   },
   {
@@ -16,7 +16,7 @@ const steps = [
     title: "AI Runs the Roast",
     description:
       "Our model tears through your UX, copy, trust signals, and conversion flow. No bias. No sugarcoating. Just data.",
-    accent: "var(--orange-vibrant)",
+    accent: "varorange-vibrant",
     glow: "rgba(249,115,22,0.15)",
   },
   {
@@ -25,7 +25,7 @@ const steps = [
     title: "Community Piles On",
     description:
       "Filipino builders from the community react, comment, and share hard-won fixes. Barkada energy, real feedback.",
-    accent: "var(--accent-warning)",
+    accent: "varaccent-warning",
     glow: "rgba(250,204,21,0.15)",
   },
 ];
@@ -54,32 +54,32 @@ export function HowItWorks() {
     <section className="pb-24">
       {/* Section label */}
       <div className="text-center mb-12">
-        <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-(--text-secondary) mb-3">
+        <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground mb-3">
           The Process
         </p>
         <h2 className="text-3xl md:text-4xl font-bold uppercase tracking-tighter">
           Three Steps to{" "}
-          <span className="bg-gradient-to-r from-(--accent-danger) via-(--orange-vibrant) to-(--accent-warning) bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-accent-danger via-orange-vibrant to-accent-warning bg-clip-text text-transparent">
             Brutal Clarity
           </span>
         </h2>
       </div>
 
       {/* Card-9 double-frame container */}
-      <div className="relative w-full border border-(--border-muted) px-4 sm:px-8 md:px-12">
+      <div className="relative w-full border border-border px-4 sm:px-8 md:px-12">
         {/* Horizontal inner rails */}
-        <div className="absolute left-0 top-8 z-0 h-px w-full bg-(--border-muted)" />
-        <div className="absolute bottom-8 left-0 z-0 h-px w-full bg-(--border-muted)" />
+        <div className="absolute left-0 top-8 z-0 h-px w-full bg-border" />
+        <div className="absolute bottom-8 left-0 z-0 h-px w-full bg-border" />
 
         {/* Vertical inner rails + corner dots */}
-        <div className="relative w-full border-x border-(--border-muted)">
+        <div className="relative w-full border-x border-border">
           <CornerDot position="tl" />
           <CornerDot position="tr" />
           <CornerDot position="bl" />
           <CornerDot position="br" />
 
           {/* Content */}
-          <div className="relative z-20 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-(--border-muted) py-10">
+          <div className="relative z-20 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border-muted py-10">
             {steps.map((step) => {
               const Icon = step.icon;
               return (
@@ -117,7 +117,7 @@ export function HowItWorks() {
                     </h3>
 
                     {/* Description */}
-                    <p className="text-sm text-(--text-secondary) font-medium leading-relaxed">
+                    <p className="text-sm text-muted-foreground font-medium leading-relaxed">
                       {step.description}
                     </p>
 

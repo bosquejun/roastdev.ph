@@ -59,16 +59,16 @@ export function LandingHero() {
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           background: `
-            radial-gradient(ellipse 70% 60% at 50% 40%, transparent 30%, var(--bg-primary) 80%),
-            linear-gradient(to bottom, var(--bg-primary) 0%, transparent 15%, transparent 75%, var(--bg-primary) 100%),
-            linear-gradient(to right, var(--bg-primary) 0%, transparent 10%, transparent 90%, var(--bg-primary) 100%)
+            radial-gradient(ellipse 70% 60% at 50% 40%, transparent 30%, var(--background) 80%),
+            linear-gradient(to bottom, var(--background) 0%, transparent 15%, transparent 75%, var(--background) 100%),
+            linear-gradient(to right, var(--background) 0%, transparent 10%, transparent 90%, var(--background) 100%)
           `,
         }}
       />
       <div className="relative z-10">
-        <div className="mb-8 inline-flex bg-gradient-to-r from-(--accent-danger) via-(--orange-vibrant) to-(--accent-warning) p-[1.5px]">
-          <div className="inline-flex items-center gap-2 bg-(--bg-primary) px-3 py-1 text-[11px] font-bold tracking-widest uppercase">
-            <span className="bg-gradient-to-r from-(--accent-danger) via-(--orange-vibrant) to-(--accent-warning) bg-clip-text text-transparent">
+        <div className="mb-8 inline-flex bg-gradient-to-r from-accent-danger via-orange-vibrant to-accent-warning p-[1.5px]">
+          <div className="inline-flex items-center gap-2 bg-background px-3 py-1 text-[11px] font-bold tracking-widest uppercase">
+            <span className="bg-gradient-to-r from-accent-danger via-orange-vibrant to-accent-warning bg-clip-text text-transparent">
               MASAKIT NA KATOTOHANAN
             </span>
           </div>
@@ -80,13 +80,13 @@ export function LandingHero() {
             scale={[6, 9]}
             className="text-amber-500"
           >
-            <span className="inline-block bg-gradient-to-r from-(--accent-danger) via-(--orange-vibrant) to-(--accent-warning) bg-clip-text px-2 text-transparent">
+            <span className="inline-block bg-gradient-to-r from-accent-danger via-orange-vibrant to-accent-warning bg-clip-text px-2 text-transparent">
               trash
             </span>
           </SquigglyText>
           . Let&apos;s fix it.
         </h1>
-        <p className="mx-auto mb-12 max-w-2xl text-lg font-medium text-(--text-secondary)">
+        <p className="mx-auto mb-12 max-w-2xl text-lg font-medium text-muted-foreground">
           Brutally honest roasts and real feedback from the Filipino builder
           community. No sugar-coating, just pure product growth.
         </p>
@@ -101,17 +101,17 @@ export function LandingHero() {
           <div className="flex-1">
             <Input
               {...register("url")}
-              className="h-12 w-full border-2 border-(--border-muted) bg-(--bg-surface) px-6 py-4 text-sm font-medium transition-colors outline-none focus:border-(--accent-warning) focus:ring-0"
+              className="h-12 w-full border-2 border-border bg-card px-6 py-4 text-sm font-medium transition-colors outline-none focus:border-accent-warning focus:ring-0"
               placeholder="https://your-startup.com"
               type="text"
             />
             {errors.url ? (
-              <div className="mt-2 ml-1 flex items-center gap-2 text-left text-sm font-medium text-(--accent-danger)">
+              <div className="mt-2 ml-1 flex items-center gap-2 text-left text-sm font-medium text-accent-danger">
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 <span>{errors.url.message}</span>
               </div>
             ) : (
-              <p className="mt-2 ml-1 text-left text-xs text-(--text-secondary)">
+              <p className="mt-2 ml-1 text-left text-xs text-muted-foreground">
                 Enter your landing page URL (e.g., yourstartup.com)
               </p>
             )}
@@ -120,7 +120,7 @@ export function LandingHero() {
             type="button"
             onClick={handleSubmit}
             disabled={Boolean(!isValid && urlValue) || isResolving}
-            className="hover:bg-opacity-90 h-12 border-2 border-(--accent-danger) bg-(--accent-danger) px-8 py-4 text-sm font-bold whitespace-nowrap text-white uppercase transition-all active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-50 disabled:active:translate-y-0"
+            className="hover:bg-opacity-90 h-12 border-2 border-accent-danger bg-accent-danger px-8 py-4 text-sm font-bold whitespace-nowrap text-white uppercase transition-all active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-50 disabled:active:translate-y-0"
           >
             {isResolving ? (
               <>

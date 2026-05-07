@@ -13,10 +13,10 @@ function CommunityButton({
   count: string;
 }) {
   return (
-    <button className="flex items-center gap-3 px-6 py-3 border-2 border-(--border-muted) hover:border-(--accent-danger) transition-all bg-(--bg-primary) active:translate-x-[2px] active:translate-y-[2px]">
+    <button className="flex items-center gap-3 px-6 py-3 border-2 border-border hover:border-accent-danger transition-all bg-background active:translate-x-[2px] active:translate-y-[2px]">
       <span className="text-2xl">{icon}</span>
       <span className="font-bold text-sm uppercase">{label}</span>
-      <span className="text-sm text-(--accent-warning) bg-(--accent-warning)/10 ml-2 px-2 py-0.5">
+      <span className="text-sm text-accent-warning bg-accent-warning/10 ml-2 px-2 py-0.5">
         {count}
       </span>
     </button>
@@ -26,9 +26,9 @@ function CommunityButton({
 export function CommunityReactions() {
   return (
     <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div className="md:col-span-2 border-2 border-(--border-muted) p-6 bg-(--bg-surface)">
+      <div className="md:col-span-2 border-2 border-border p-6 bg-card">
         <h3 className="text-2xl font-bold mb-6 flex items-center gap-2 uppercase">
-          <MessageSquare className="w-6 h-6 text-(--accent-warning)" />
+          <MessageSquare className="w-6 h-6 text-accent-warning" />
           Community Reactions
         </h3>
         <div className="flex flex-wrap gap-4 mb-8">
@@ -37,8 +37,8 @@ export function CommunityReactions() {
           <CommunityButton icon="💯" label="Respeto" count="45" />
         </div>
         <div className="space-y-4">
-          <div className="p-4 border-l-2 border-(--border-muted) bg-(--surface-container)">
-            <p className="text-(--accent-warning) text-[10px] font-bold mb-1 uppercase tracking-widest">
+          <div className="p-4 border-l-2 border-border bg-muted">
+            <p className="text-accent-warning text-[10px] font-bold mb-1 uppercase tracking-widest">
               @frontend_king
             </p>
             <p className="text-sm font-medium">
@@ -46,8 +46,8 @@ export function CommunityReactions() {
               bahay.&quot;
             </p>
           </div>
-          <div className="p-4 border-l-2 border-(--border-muted) bg-(--surface-container)">
-            <p className="text-(--accent-warning) text-[10px] font-bold mb-1 uppercase tracking-widest">
+          <div className="p-4 border-l-2 border-border bg-muted">
+            <p className="text-accent-warning text-[10px] font-bold mb-1 uppercase tracking-widest">
               @debug_queen
             </p>
             <p className="text-sm font-medium">
@@ -58,7 +58,7 @@ export function CommunityReactions() {
         </div>
       </div>
 
-      <div className="border-2 border-(--border-muted) p-6 bg-(--accent-danger) text-(--bg-primary) flex flex-col justify-between">
+      <div className="border-2 border-border p-6 bg-accent-danger text-background flex flex-col justify-between">
         <div>
           <h3 className="text-4xl font-black uppercase leading-[0.9] mb-4">
             Shame is a team sport.
@@ -68,13 +68,13 @@ export function CommunityReactions() {
           </p>
         </div>
         <div className="space-y-3 mt-8">
-          <Button className="w-full bg-(--bg-primary) text-white border-2 border-(--bg-primary) py-3 font-bold uppercase flex items-center justify-center gap-2 hover:bg-transparent hover:text-(--bg-primary) transition-all active:translate-x-[2px] active:translate-y-[2px]">
+          <Button className="w-full bg-background text-white border-2 border-background py-3 font-bold uppercase flex items-center justify-center gap-2 hover:bg-transparent hover:text-background transition-all active:translate-x-[2px] active:translate-y-[2px]">
             <Share2 className="w-5 h-5" />
             Share the Roast
           </Button>
           <Button
             variant="outline"
-            className="w-full border-2 border-(--bg-primary) text-(--bg-primary) bg-transparent py-3 font-bold uppercase flex items-center justify-center gap-2 hover:bg-(--bg-primary) hover:text-(--text-primary) transition-all active:translate-x-[2px] active:translate-y-[2px]"
+            className="w-full border-2 border-background text-background bg-transparent py-3 font-bold uppercase flex items-center justify-center gap-2 hover:bg-background hover:text-foreground transition-all active:translate-x-[2px] active:translate-y-[2px]"
           >
             <Download className="w-5 h-5" />
             Export Disaster Log

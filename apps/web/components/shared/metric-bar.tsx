@@ -12,10 +12,10 @@ interface MetricBarProps {
 export function MetricBar({ label, score, colorClass, shadowClass }: MetricBarProps) {
   const scoreColor =
     score < 30
-      ? "text-(--accent-danger)"
+      ? "text-accent-danger"
       : score < 60
-        ? "text-(--accent-warning)"
-        : "text-(--accent-success)";
+        ? "text-accent-warning"
+        : "text-accent-success";
 
   return (
     <div className="space-y-2">
@@ -23,7 +23,7 @@ export function MetricBar({ label, score, colorClass, shadowClass }: MetricBarPr
         <span>{label}</span>
         <span className={scoreColor}>{score}/100</span>
       </div>
-      <div className="h-3 w-full bg-(--bg-primary) border border-(--border-muted)">
+      <div className="h-3 w-full bg-background border border-border">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${score}%` }}

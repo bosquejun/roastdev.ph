@@ -156,7 +156,7 @@ importers:
         specifier: ^1.14.0
         version: 1.14.0(react@19.2.4)
       motion:
-        specifier: ^12.23.24
+        specifier: ^12.38.0
         version: 12.38.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next-themes:
         specifier: ^0.4.6

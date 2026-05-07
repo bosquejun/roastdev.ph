@@ -54,20 +54,20 @@ export default function RootLayout({
     >
       <body>
         <ThemeProvider>
-<div className="min-h-screen selection:bg-(--accent-danger) selection:text-white bg-(--bg-primary)">
+<div className="min-h-screen selection:bg-accent-danger selection:text-white bg-background">
 
       {/* Fixed vertical rails — z-[60] to render above navbar z-50 */}
       <div className="fixed inset-0 z-[60] pointer-events-none">
         <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 md:px-8 relative">
-          <div className="absolute inset-y-0 left-4 sm:left-6 md:left-8 w-px bg-(--border-muted)" />
-          <div className="absolute inset-y-0 right-4 sm:right-6 md:right-8 w-px bg-(--border-muted)" />
+          <div className="absolute inset-y-0 left-4 sm:left-6 md:left-8 w-px bg-border" />
+          <div className="absolute inset-y-0 right-4 sm:right-6 md:right-8 w-px bg-border" />
         </div>
       </div>
 
       {/* Fixed horizontal rail at bottom of navbar with centered dots */}
       <div className="fixed top-[80px] left-0 right-0 z-[60] pointer-events-none">
         {/* The rail line */}
-        <div className="h-px bg-(--border-muted) w-full" />
+        <div className="h-px bg-border w-full" />
         {/* Crosses centered on the rail × vertical rail intersection */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex justify-between -translate-y-1/2">
           <div className="-translate-x-1/2">
@@ -87,7 +87,7 @@ export default function RootLayout({
 
       {/* Horizontal rail above footer — full viewport width, same structure as navbar rail */}
       <div className="left-0 right-0 z-[60] pointer-events-none">
-        <div className="h-px bg-(--border-muted) w-full" />
+        <div className="h-px bg-border w-full" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex justify-between -translate-y-1/2">
           <div className="-translate-x-1/2">
             <RailCross />

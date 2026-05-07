@@ -63,7 +63,7 @@ export function SubmitStartupForm() {
       <div className="space-y-2">
         <label
           htmlFor="companyName"
-          className="block text-xs font-bold uppercase tracking-wider text-(--text-secondary)"
+          className="block text-xs font-bold uppercase tracking-wider text-muted-foreground"
         >
           Company/Product Name
         </label>
@@ -71,10 +71,10 @@ export function SubmitStartupForm() {
           id="companyName"
           {...register("companyName")}
           placeholder="RocketPH, KonekTok, PayMaya..."
-          className="w-full bg-(--bg-surface) h-12 border-2 border-(--border-muted) px-4 py-3 text-sm font-medium focus:border-(--accent-warning) focus:ring-0 outline-none transition-colors"
+          className="w-full bg-card h-12 border-2 border-border px-4 py-3 text-sm font-medium focus:border-accent-warning focus:ring-0 outline-none transition-colors"
         />
         {errors.companyName && (
-          <div className="flex items-center gap-2 text-(--accent-danger) text-sm font-medium">
+          <div className="flex items-center gap-2 text-accent-danger text-sm font-medium">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errors.companyName.message}</span>
           </div>
@@ -84,7 +84,7 @@ export function SubmitStartupForm() {
       <div className="space-y-2">
         <label
           htmlFor="url"
-          className="block text-xs font-bold uppercase tracking-wider text-(--text-secondary)"
+          className="block text-xs font-bold uppercase tracking-wider text-muted-foreground"
         >
           Website URL
         </label>
@@ -93,10 +93,10 @@ export function SubmitStartupForm() {
           {...register("url")}
           placeholder="https://yourstartup.com"
           type="text"
-          className="w-full bg-(--bg-surface) h-12 border-2 border-(--border-muted) px-4 py-3 text-sm font-medium focus:border-(--accent-warning) focus:ring-0 outline-none transition-colors"
+          className="w-full bg-card h-12 border-2 border-border px-4 py-3 text-sm font-medium focus:border-accent-warning focus:ring-0 outline-none transition-colors"
         />
         {errors.url && (
-          <div className="flex items-center gap-2 text-(--accent-danger) text-sm font-medium">
+          <div className="flex items-center gap-2 text-accent-danger text-sm font-medium">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errors.url.message}</span>
           </div>
@@ -106,7 +106,7 @@ export function SubmitStartupForm() {
       <div className="space-y-2">
         <label
           htmlFor="description"
-          className="block text-xs font-bold uppercase tracking-wider text-(--text-secondary)"
+          className="block text-xs font-bold uppercase tracking-wider text-muted-foreground"
         >
           Short Description
         </label>
@@ -114,23 +114,23 @@ export function SubmitStartupForm() {
           id="description"
           {...register("description")}
           placeholder="A P2P payments app for rural Philippines..."
-          className="w-full bg-(--bg-surface) border-2 border-(--border-muted) px-4 py-3 text-sm font-medium focus:border-(--accent-warning) focus:ring-0 outline-none transition-colors min-h-[100px] resize-none"
+          className="w-full bg-card border-2 border-border px-4 py-3 text-sm font-medium focus:border-accent-warning focus:ring-0 outline-none transition-colors min-h-[100px] resize-none"
         />
         <div className="flex justify-between items-center">
           {errors.description && (
-            <div className="flex items-center gap-2 text-(--accent-danger) text-sm font-medium">
+            <div className="flex items-center gap-2 text-accent-danger text-sm font-medium">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errors.description.message}</span>
             </div>
           )}
-          <span className={`text-xs ml-auto ${charCount > 270 ? "text-(--accent-warning)" : "text-(--text-secondary)"}`}>
+          <span className={`text-xs ml-auto ${charCount > 270 ? "text-accent-warning" : "text-muted-foreground"}`}>
             {charCount}/300
           </span>
         </div>
       </div>
 
       <div className="space-y-3">
-        <label className="block text-xs font-bold uppercase tracking-wider text-(--text-secondary)">
+        <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground">
           What to Focus On (Optional)
         </label>
         <div className="grid grid-cols-2 gap-3">
@@ -143,9 +143,9 @@ export function SubmitStartupForm() {
                 type="checkbox"
                 value={option.id}
                 {...register("focusAreas")}
-                className="w-5 h-5 rounded border-2 border-(--border-muted) bg-(--bg-surface) checked:bg-(--accent-danger) checked:border-(--accent-danger) focus:ring-0 cursor-pointer"
+                className="w-5 h-5 rounded border-2 border-border bg-card checked:bg-accent-danger checked:border-accent-danger focus:ring-0 cursor-pointer"
               />
-              <span className="text-sm font-medium text-(--text-primary) group-hover:text-(--accent-warning) transition-colors">
+              <span className="text-sm font-medium text-foreground group-hover:text-accent-warning transition-colors">
                 {option.label}
               </span>
             </label>
@@ -156,7 +156,7 @@ export function SubmitStartupForm() {
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-(--accent-danger) h-14 text-white font-bold px-8 py-4 border-2 border-(--accent-danger) active:translate-y-1 active:translate-x-[2px] transition-all hover:bg-opacity-90 uppercase text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:active:translate-y-0 disabled:active:translate-x-0"
+        className="w-full bg-accent-danger h-14 text-white font-bold px-8 py-4 border-2 border-accent-danger active:translate-y-1 active:translate-x-[2px] transition-all hover:bg-opacity-90 uppercase text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:active:translate-y-0 disabled:active:translate-x-0"
       >
         {isSubmitting ? (
           <>
