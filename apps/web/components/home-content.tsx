@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "motion/react";
 import { Navbar } from "./shared/navbar";
 import { Footer } from "./shared/footer";
@@ -8,16 +7,13 @@ import { LandingHero } from "./features/home/landing-hero";
 import { HowItWorks } from "./features/home/how-it-works";
 import { RoastPreview } from "./features/home/roast-preview";
 import { Manifesto } from "./features/home/manifesto";
-import { ResultView } from "./features/roast/result-view";
 
 const RailCross = () => (
   <div className="relative shrink-0 size-3 flex items-center justify-center">
-    {/* horizontal arm */}
     <div
       className="absolute h-px w-full"
       style={{ background: "linear-gradient(90deg, #FF4E4E, #FACC15)" }}
     />
-    {/* vertical arm */}
     <div
       className="absolute w-px h-full"
       style={{ background: "linear-gradient(180deg, #FF4E4E, #FACC15)" }}
@@ -26,18 +22,6 @@ const RailCross = () => (
 );
 
 export function HomeContent() {
-  const [view, setView] = useState<"landing" | "result">("landing");
-  const [submittedUrl, setSubmittedUrl] = useState("");
-
-  const handleRoast = (url: string) => {
-    setSubmittedUrl(url);
-    setView("result");
-  };
-
-  const handleBack = () => {
-    setView("landing");
-  };
-
   return (
     <div className="min-h-screen selection:bg-(--accent-danger) selection:text-white bg-(--bg-primary)">
 
@@ -69,20 +53,16 @@ export function HomeContent() {
         <Navbar />
 
         <main className="px-6 py-8">
-          {view === "landing" ? (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-24"
-            >
-              <LandingHero onRoast={handleRoast} />
-              <HowItWorks />
-              <RoastPreview />
-              <Manifesto />
-            </motion.div>
-          ) : (
-            <ResultView onBack={handleBack} />
-          )}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-24"
+          >
+            <LandingHero />
+            <HowItWorks />
+            <RoastPreview />
+            <Manifesto />
+          </motion.div>
         </main>
 
         <Footer />

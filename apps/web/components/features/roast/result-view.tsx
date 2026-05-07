@@ -7,10 +7,10 @@ import { MetricBar } from "../../shared/metric-bar";
 import { CommunityReactions } from "./community-reactions";
 
 interface ResultViewProps {
-  onBack: () => void;
+  hash: string;
 }
 
-export function ResultView({ onBack }: ResultViewProps) {
+export function ResultView({ hash }: ResultViewProps) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.98 }}
@@ -18,12 +18,12 @@ export function ResultView({ onBack }: ResultViewProps) {
       className="pt-10"
     >
       <div className="flex justify-between items-center mb-8">
-        <button
-          onClick={onBack}
+        <a
+          href="/"
           className="text-(--text-secondary) text-xs font-bold uppercase hover:text-(--accent-danger) flex items-center gap-2"
         >
           ← Back to Stream
-        </button>
+        </a>
       </div>
 
       <section className="mb-8 text-center md:text-left">

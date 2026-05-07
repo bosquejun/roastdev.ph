@@ -1,22 +1,32 @@
 "use client";
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { SquigglyText } from "@workspace/ui/components/squiggly-text";
-import { Flame } from "lucide-react";
+import { Flame, AlertCircle } from "lucide-react";
+import { roastUrl } from "@/app/actions/roast";
+import { RoastFormSchema, roastFormSchema } from "@/lib/schemas";
 
-interface LandingHeroProps {
-  onRoast?: (url: string) => void;
-}
+export function LandingHero() {
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = useForm<RoastFormSchema>({
+    resolver: zodResolver(roastFormSchema),
+    mode: "onChange",
+  });
 
-export function LandingHero({ onRoast }: LandingHeroProps) {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const url = formData.get("url") as string;
-    if (url?.trim()) {
-      onRoast?.(url);
-    }
+  const urlValue = watch("url");
+  const hasContent = urlValue && urlValue.trim().length > 0;
+  const isValid = hasContent && !errors.url;
+
+  const handleSubmit = () => {
+    const formData = new FormData();
+    formData.set("url", urlValue);
+    roastUrl(formData);
   };
 
   return (
@@ -29,7 +39,6 @@ export function LandingHero({ onRoast }: LandingHeroProps) {
         backgroundSize: "24px 24px",
       }}
     >
-      {/* Radial + edge fade mask to show grid only in center */}
       <div
         className="pointer-events-none absolute inset-0 z-0"
         style={{
@@ -41,7 +50,6 @@ export function LandingHero({ onRoast }: LandingHeroProps) {
         }}
       />
       <div className="relative z-10">
-      {/* Gradient border via background-clip trick */}
       <div className="inline-flex p-[1.5px] bg-gradient-to-r from-(--accent-danger) via-(--orange-vibrant) to-(--accent-warning) mb-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-(--bg-primary) text-[11px] font-bold uppercase tracking-widest">
           <span className="bg-gradient-to-r from-(--accent-danger) via-(--orange-vibrant) to-(--accent-warning) bg-clip-text text-transparent">
@@ -61,7 +69,7 @@ export function LandingHero({ onRoast }: LandingHeroProps) {
         </span>
                 </SquigglyText>
 
-        . Let's fix it.
+        . Let&apos;s fix it.
       </h1>
       <p className="text-lg text-(--text-secondary) mb-12 max-w-2xl mx-auto font-medium">
         Brutally honest roasts and real feedback from the Filipino
@@ -69,17 +77,35 @@ export function LandingHero({ onRoast }: LandingHeroProps) {
       </p>
 
       <form
-        onSubmit={handleSubmit}
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
         className="max-w-xl mx-auto flex flex-col md:flex-row gap-0 group"
       >
-        <Input
-          name="url"
-          className="w-full bg-(--bg-surface) h-12 border-2 border-(--border-muted) px-6 py-4 text-sm font-medium focus:border-(--accent-warning) focus:ring-0 outline-none transition-colors"
-          placeholder="https://your-startup.com"
-          type="text"
-          required
-        />
-        <Button className="bg-(--accent-danger) h-12 text-white font-bold px-8 py-4 border-2 border-(--accent-danger) whitespace-nowrap active:translate-y-1 transition-all hover:bg-opacity-90 uppercase text-sm">
+        <div className="flex-1">
+          <Input
+            {...register("url")}
+            className="w-full bg-(--bg-surface) h-12 border-2 border-(--border-muted) px-6 py-4 text-sm font-medium focus:border-(--accent-warning) focus:ring-0 outline-none transition-colors"
+            placeholder="https://your-startup.com"
+            type="text"
+          />
+          {errors.url ? (
+            <div className="flex items-center gap-2 mt-2 ml-1 text-(--accent-danger) text-sm font-medium text-left">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{errors.url.message}</span>
+            </div>
+          ) : (
+            <p className="mt-2 ml-1 text-(--text-secondary) text-xs text-left">
+              Enter your landing page URL (e.g., yourstartup.com)
+            </p>
+          )}
+        </div>
+        <Button
+          type="submit"
+          disabled={!isValid && urlValue}
+          className="bg-(--accent-danger) h-12 text-white font-bold px-8 py-4 border-2 border-(--accent-danger) whitespace-nowrap active:translate-y-1 transition-all hover:bg-opacity-90 uppercase text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:active:translate-y-0"
+        >
           <Flame/> Get Roasted
         </Button>
       </form>
