@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Terminal, Code } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 
@@ -31,6 +32,12 @@ export function Navbar() {
             >
               Archives
             </a>
+            <Link
+              href="/submit"
+              className="text-sm font-bold uppercase tracking-wider hover:text-(--accent-danger) transition-colors"
+            >
+              Submit
+            </Link>
           </div>
         </div>
         <div className="flex items-center gap-4">
