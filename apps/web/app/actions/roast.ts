@@ -29,27 +29,25 @@ export async function resolveUrl(formData: FormData): Promise<ResolveResult | nu
   return { host, hash };
 }
 
-export async function roastUrl(formData: FormData): Promise<void> {
+export async function roastUrl(formData: FormData): Promise<string | null> {
   const url = formData.get("url") as string;
 
   if (!url || !isValidUrl(url)) {
-    return;
+    return null;
   }
 
   const normalizedUrl = normalizeUrl(url);
 
-  let hash: string;
+  let resolved: string;
   try {
-    const resolved = await resolveRedirects(normalizedUrl);
+    resolved = await resolveRedirects(normalizedUrl);
     if (!resolved) {
-      return;
+      return null;
     }
-    hash = await generateHash(resolved);
   } catch {
-    return;
+    return null;
   }
 
-  import("next/navigation").then(({ redirect }) => {
-    redirect(`/roasted/${hash}`);
-  });
+  const urlObj = new URL(resolved);
+  return urlObj.host;
 }
