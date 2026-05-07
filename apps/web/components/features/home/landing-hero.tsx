@@ -2,14 +2,17 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { SquigglyText } from "@workspace/ui/components/squiggly-text";
-import { Flame, AlertCircle } from "lucide-react";
-import { roastUrl } from "@/app/actions/roast";
+import { Flame, AlertCircle, Loader2, Loader } from "lucide-react";
+import { resolveUrl, ResolveResult } from "@/app/actions/roast";
 import { RoastFormSchema, roastFormSchema } from "@/lib/schemas";
 
 export function LandingHero() {
+  const router = useRouter();
   const {
     register,
     watch,
@@ -23,10 +26,24 @@ export function LandingHero() {
   const hasContent = urlValue && urlValue.trim().length > 0;
   const isValid = hasContent && !errors.url;
 
-  const handleSubmit = () => {
+  const [isResolving, setIsResolving] = useState(false);
+  const [resolvedInfo, setResolvedInfo] = useState<ResolveResult | null>(null);
+
+  const handleSubmit = async () => {
+    if (!isValid) return;
+
+    setIsResolving(true);
     const formData = new FormData();
     formData.set("url", urlValue);
-    roastUrl(formData);
+
+    const result = await resolveUrl(formData);
+
+    if (result) {
+      setResolvedInfo(result);
+      router.push(`/roasted/${result.hash}`);
+    }
+
+    setIsResolving(false);
   };
 
   return (
@@ -102,11 +119,21 @@ export function LandingHero() {
           )}
         </div>
         <Button
-          type="submit"
-          disabled={!isValid && urlValue}
+          type="button"
+          onClick={handleSubmit}
+          disabled={(Boolean(!isValid && urlValue)) || isResolving}
           className="bg-(--accent-danger) h-12 text-white font-bold px-8 py-4 border-2 border-(--accent-danger) whitespace-nowrap active:translate-y-1 transition-all hover:bg-opacity-90 uppercase text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:active:translate-y-0"
         >
-          <Flame/> Get Roasted
+          {isResolving ? (
+            <>
+              <Loader className="w-4 h-4 animate-spin mr-2" />
+              Roasting..
+            </>
+          ) : (
+            <>
+              <Flame /> Get Roasted
+            </>
+          )}
         </Button>
       </form>
       </div>

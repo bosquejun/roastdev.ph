@@ -31,3 +31,29 @@ export function normalizeUrl(url: string): string {
   }
   return trimmed;
 }
+
+export async function resolveRedirects(url: string): Promise<string | null> {
+  const normalized = normalizeUrl(url);
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const response = await fetch(normalized, {
+      method: "HEAD",
+      redirect: "manual",
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    const location = response.headers.get("Location");
+    if (location) {
+      return resolveRedirects(location);
+    }
+
+    return normalized;
+  } catch {
+    return null;
+  }
+}

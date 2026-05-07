@@ -15,16 +15,8 @@ export function ResultView({ hash }: ResultViewProps) {
     <motion.div
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="pt-10"
+      className="py-10 px-8"
     >
-      <div className="flex justify-between items-center mb-8">
-        <a
-          href="/"
-          className="text-(--text-secondary) text-xs font-bold uppercase hover:text-(--accent-danger) flex items-center gap-2"
-        >
-          ← Back to Stream
-        </a>
-      </div>
 
       <section className="mb-8 text-center md:text-left">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
