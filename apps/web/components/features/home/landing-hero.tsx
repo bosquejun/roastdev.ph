@@ -74,17 +74,17 @@ export function LandingHero() {
           </div>
         </div>
         <h1 className="mx-auto mb-8 max-w-4xl text-5xl leading-[1.1] font-bold uppercase md:text-7xl">
-          Your startup is probably{" "}
-          <SquigglyText
-            stepDuration={90}
-            scale={[6, 9]}
-            className="text-amber-500"
-          >
+          Your <span className="text-accent-danger">site</span> is probably{" "}
+          <SquigglyText stepDuration={90} scale={[6, 9]}>
+            trash
+          </SquigglyText>
+          . Let&apos;s
+          <SquigglyText stepDuration={90} scale={[6, 9]}>
             <span className="inline-block bg-gradient-to-r from-accent-danger via-orange-vibrant to-accent-warning bg-clip-text px-2 text-transparent">
-              trash
+              roast
             </span>
           </SquigglyText>
-          . Let&apos;s fix it.
+          it.
         </h1>
         <p className="mx-auto mb-12 max-w-2xl text-lg font-medium text-muted-foreground">
           Brutally honest roasts and real feedback from the Filipino builder
@@ -102,7 +102,7 @@ export function LandingHero() {
             <Input
               {...register("url")}
               className="h-12 w-full border-2 border-border bg-card px-6 py-4 text-sm font-medium transition-colors outline-none focus:border-accent-warning focus:ring-0"
-              placeholder="https://your-startup.com"
+              placeholder="your-sh*t.com"
               type="text"
             />
             {errors.url ? (
@@ -112,7 +112,7 @@ export function LandingHero() {
               </div>
             ) : (
               <p className="mt-2 ml-1 text-left text-xs text-muted-foreground">
-                Enter your landing page URL (e.g., yourstartup.com)
+                Enter your landing page URL (e.g., your-sh*t.com)
               </p>
             )}
           </div>

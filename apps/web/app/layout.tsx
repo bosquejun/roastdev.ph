@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@workspace/ui/lib/utils"
 import { Navbar } from "@/components/shared/navbar"
 import { Footer } from "@/components/shared/footer"
+import { ClerkProvider } from "@clerk/nextjs"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -91,55 +92,23 @@ export default function RootLayout({
       )}
     >
       <body>
-        <ThemeProvider>
-          <div className="min-h-screen bg-background selection:bg-accent-danger selection:text-white">
-            {/* Fixed vertical rails — z-[60] to render above navbar z-50 */}
-            <div className="pointer-events-none fixed inset-0 z-[60]">
-              <div className="relative mx-auto h-full max-w-7xl px-4 sm:px-6 md:px-8">
-                <div className="absolute inset-y-0 left-4 w-px bg-border sm:left-6 md:left-8" />
-                <div className="absolute inset-y-0 right-4 w-px bg-border sm:right-6 md:right-8" />
-              </div>
-            </div>
-
-            {/* Fixed horizontal rail at bottom of navbar with centered dots */}
-            <div className="pointer-events-none fixed top-[80px] right-0 left-0 z-[60]">
-              {/* The rail line */}
-              <div className="h-px w-full bg-border" />
-              {/* Crosses centered on the rail × vertical rail intersection */}
-              <div className="mx-auto flex max-w-7xl -translate-y-1/2 justify-between px-4 sm:px-6 md:px-8">
-                <div className="-translate-x-1/2">
-                  <RailCross />
-                </div>
-                <div className="translate-x-1/2">
-                  <RailCross />
-                </div>
-              </div>
-            </div>
-
-            {/* Scrollable content */}
-            <div className="relative mx-auto min-h-screen max-w-7xl px-4 sm:px-6 md:px-8">
-              <Navbar />
-              {children}
-            </div>
-
-            {/* Horizontal rail above footer — full viewport width, same structure as navbar rail */}
-            <div className="pointer-events-none right-0 left-0 z-[60]">
-              <div className="h-px w-full bg-border" />
-              <div className="mx-auto flex max-w-7xl -translate-y-1/2 justify-between px-4 sm:px-6 md:px-8">
-                <div className="-translate-x-1/2">
-                  <RailCross />
-                </div>
-                <div className="translate-x-1/2">
-                  <RailCross />
-                </div>
-              </div>
-            </div>
-
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-              <Footer />
-            </div>
-          </div>
-        </ThemeProvider>
+        <ClerkProvider
+          appearance={{
+            elements: {
+              modalBackdrop: "!bg-background/50 backdrop-blur",
+              cardBox: "!rounded-none",
+              footer: "!hidden",
+              socialButtonsBlockButton:
+                "!rounded-none h-12 w-full !border-2 !border-card !bg-secondary px-6 py-2 !text-lg font-bold !text-white uppercase !shadow-[4px_4px_0px_0px_#2e2e32] transition-all hover:brightness-105 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none ",
+              formButtonPrimary:
+                "!rounded-none h-12 w-full !border-2 !border-card !bg-gradient-to-r !from-accent-danger via-orange-vibrant to-accent-warning px-6 py-2 !text-lg font-bold !text-white uppercase !shadow-[4px_4px_0px_0px_#7f1d1d] transition-all hover:brightness-105 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none ",
+              formFieldInput: "!rounded-none",
+              userButtonPopoverCard: "!rounded-none",
+            },
+          }}
+        >
+          <ThemeProvider>{children}</ThemeProvider>
+        </ClerkProvider>
       </body>
     </html>
   )

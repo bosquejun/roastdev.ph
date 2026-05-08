@@ -1,62 +1,74 @@
-import { Rocket } from "lucide-react";
-import { MetricBar } from "../../shared/metric-bar";
+import { Rocket } from "lucide-react"
+import { MetricBar } from "../../shared/metric-bar"
 
 export function RoastPreview() {
   return (
-    <section className="pb-24 p-8">
-      <div className="bg-card border-2 border-border relative p-1 overflow-hidden">
-        <div className="bg-border flex justify-between items-center px-4 py-2">
+    <section className="p-8 pb-24">
+      <div className="relative overflow-hidden border-2 border-border bg-card p-1">
+        <div className="flex items-center justify-between bg-border px-4 py-2">
           <div className="flex gap-2">
-            <div className="w-3 h-3 rounded-full bg-accent-danger" />
-            <div className="w-3 h-3 rounded-full bg-accent-warning" />
-            <div className="w-3 h-3 rounded-full bg-accent-success" />
+            <div className="h-3 w-3 rounded-full bg-accent-danger" />
+            <div className="h-3 w-3 rounded-full bg-accent-warning" />
+            <div className="h-3 w-3 rounded-full bg-accent-success" />
           </div>
-          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+          <span className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
             ROAST_TERMINAL_V1.0
           </span>
           <div className="w-12"></div>
         </div>
-        <div className="p-8 grid md:grid-cols-12 gap-8">
-          <div className="md:col-span-8 space-y-8">
+        <div className="grid gap-8 p-8 md:grid-cols-12">
+          <div className="space-y-8 md:col-span-8">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-muted border border-border flex items-center justify-center">
-                <Rocket className="w-10 h-10 text-muted-foreground" />
+              <div className="flex h-16 w-16 items-center justify-center border border-border bg-muted">
+                <Rocket className="h-10 w-10 text-muted-foreground" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold">Grab-N-Go Saas</h3>
+                <h3 className="text-2xl font-bold">RoastDevPH</h3>
                 <p className="text-xs text-muted-foreground italic">
-                  Submitted by: @PinoyDevMaster
+                  Submitted by: @jun
                 </p>
               </div>
             </div>
             <div className="border-l-4 border-accent-warning bg-muted px-6 py-6 italic">
-              <p className="text-xl font-bold mb-4">
+              <p className="mb-4 text-xl font-bold">
                 &quot;Ganda ng UI, pero asan yung users? Ghost town yarn?&quot;
               </p>
-              <p className="text-muted-foreground font-medium leading-relaxed not-italic">
-                &quot;Seryoso, batch {new Date().getFullYear()} na pero yung landing page mo mukhang
-                template na binili sa Envato nung 2018. Ang daming buttons
-                na &#39;Coming Soon&#39; - pre, MVP ba &#39;to o listahan ng
-                pangarap?&quot;
+              <p className="leading-relaxed font-medium text-muted-foreground not-italic">
+                &quot;Seryoso, batch {new Date().getFullYear()} na pero yung
+                landing page mo mukhang template na binili sa Envato nung 2018.
+                Ang daming buttons na &#39;Coming Soon&#39; - pre, MVP ba
+                &#39;to o listahan ng pangarap?&quot;
               </p>
             </div>
           </div>
-          <div className="md:col-span-4 space-y-6">
+          <div className="space-y-6 md:col-span-4">
             <MetricBar
-              label="First Impression"
-              score={20}
+              label="Nobody Cares Level"
+              score={87}
+              colorClass="bg-accent-success"
+              shadowClass="shadow-[0_0_15px_rgba(34,197,94,0.4)]"
+            />
+            <MetricBar
+              label="Actual Users"
+              score={3}
               colorClass="bg-accent-danger"
               shadowClass="shadow-[0_0_15px_rgba(255,78,78,0.4)]"
             />
             <MetricBar
-              label="Trust Factor"
-              score={40}
+              label="Cringe Density"
+              score={60}
               colorClass="bg-accent-warning"
               shadowClass="shadow-[0_0_15px_rgba(250,204,21,0.4)]"
             />
             <MetricBar
-              label="Pinoyness"
-              score={90}
+              label="10x Potential"
+              score={8}
+              colorClass="bg-accent-danger"
+              shadowClass="shadow-[0_0_15px_rgba(255,78,78,0.4)]"
+            />
+            <MetricBar
+              label="Series A Delusion"
+              score={94}
               colorClass="bg-accent-success"
               shadowClass="shadow-[0_0_15px_rgba(34,197,94,0.4)]"
             />
@@ -64,5 +76,5 @@ export function RoastPreview() {
         </div>
       </div>
     </section>
-  );
+  )
 }

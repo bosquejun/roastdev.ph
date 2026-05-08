@@ -1,17 +1,18 @@
 import {
-  convertToModelMessages,
   createUIMessageStreamResponse,
-  UIMessage,
+  simulateReadableStream,
+  type UIMessageChunk,
 } from "ai"
 import { start } from "workflow/api"
-import { roastStartupWorkflow } from "@/lib/workflows/roast-startup"
+import {
+  roastStartupWorkflow,
+  ROAST_CACHE_KEY,
+} from "@/lib/workflows/roast-startup"
 import {
   ratelimit,
   getClientKey,
   createRateLimitHeaders,
 } from "@/lib/rate-limit"
-import { redis } from "@/lib/redis"
-import objectHash from "object-hash"
 
 const RATE_LIMIT_LIMIT = 1
 const RATE_LIMIT_WINDOW = "1m"
@@ -37,21 +38,6 @@ export async function POST(req: Request) {
   }
 
   const { host }: { host: string } = await req.json()
-
-  const roastKey = `${host}:roasted-message`
-
-  console.log({ roastKey })
-  // Check if we have a cached response
-  const cached = (await redis.get(roastKey)) as string | null
-
-  console.log(`Has cached roasted: ${Boolean(cached)}`)
-
-  if (cached != null) {
-    return new Response(cached, {
-      status: 200,
-      headers: { "Content-Type": "text/plain" },
-    })
-  }
 
   const run = await start(roastStartupWorkflow, [{ host }])
 

@@ -1,26 +1,55 @@
+import Image from "next/image"
+import Link from "next/link"
+
 export function Footer() {
   return (
-    <footer className="bg-background py-8">
-      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-        <div className="text-lg font-bold uppercase tracking-tighter">
-          ROASTDEVPH
-        </div>
-        <p className="text-xs uppercase tracking-widest text-muted-foreground">
-          © 2024 ROASTDEVPH — NO MERCY FOR YOUR STACK.
-        </p>
+    <footer className="py-8">
+      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 md:flex-row">
+        <Link href="/" className="flex items-center gap-2">
+          <Image
+            src="/brand.svg"
+            width={140}
+            height={52}
+            alt="RoastDevPH logo"
+            className="h-auto w-28"
+          />
+        </Link>
+
         <div className="flex gap-6">
-          {["Archives", "Leaderboard", "Github", "Submit"].map((link) => (
-            <a
-              key={link}
-              className="text-xs uppercase tracking-widest text-muted-foreground hover:text-white underline decoration-2 decoration-accent-danger underline-offset-4"
-              href="#"
-            >
-              {link}
-            </a>
-          ))}
+          <Link
+            href="/"
+            className="text-xs text-muted-foreground transition-colors hover:text-white"
+          >
+            Roast
+          </Link>
+          <Link
+            href="/submit"
+            className="text-xs text-muted-foreground transition-colors hover:text-white"
+          >
+            Submit
+          </Link>
+          <a
+            href="https://github.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-muted-foreground transition-colors hover:text-white"
+          >
+            GitHub
+          </a>
+          <a
+            href="https://discord.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-muted-foreground transition-colors hover:text-white"
+          >
+            Discord
+          </a>
         </div>
+
+        <p className="text-xs text-muted-foreground">
+          © {new Date().getFullYear()} RoastDevPH
+        </p>
       </div>
     </footer>
-
-  );
+  )
 }

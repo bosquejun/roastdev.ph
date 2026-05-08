@@ -3,16 +3,18 @@ import { createUIMessageStream, type UIMessageChunk } from "ai"
 import { roasterAgent } from "../ai/roaster-agent/agent"
 import { redis } from "../redis"
 
+export const ROAST_CACHE_KEY = (host: string) => `${host}:roasted-message`
+
 const agentStep = async ({ host }: { host: string }) => {
   "use step"
-  const cacheKey = `${host}:roasted-message`
-
-  console.log({ cacheKey })
+  const cacheKey = ROAST_CACHE_KEY(host)
 
   const metadata = getStepMetadata()
 
   const writable = getWritable<UIMessageChunk>()
   const writer = writable.getWriter()
+
+  const chunks: UIMessageChunk[] = []
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
@@ -31,7 +33,6 @@ const agentStep = async ({ host }: { host: string }) => {
           sendReasoning: true,
           async onFinish({ messages }) {
             console.log(`Finished roasting. Storing cache. ${cacheKey}`)
-            // Cache the response text:
             await redis.set(cacheKey, messages)
           },
         })
@@ -55,6 +56,7 @@ const agentStep = async ({ host }: { host: string }) => {
         }
       }
     }
+    chunks.push(chunk)
     await writer.write(chunk)
   }
 
@@ -66,3 +68,5 @@ export async function roastStartupWorkflow({ host }: { host: string }) {
 
   await agentStep({ host })
 }
+
+roastStartupWorkflow.maxConcurrency = 1

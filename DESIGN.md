@@ -27,12 +27,14 @@ The brand personality is aggressive, witty, and unapologetically honest. It targ
 ## 3. Typography
 A dual-font strategy is employed to balance technical precision with readability.
 
-- **Display & Headings:** `Space Grotesk`
+- **Display & Headings:** `Retropix` (custom local font)
   - Style: Bold, often Uppercase, 2px letter-spacing for labels.
   - Used for: Brand logo, hero headers, metric labels, and terminal headers.
-- **Body & Content:** `Be Vietnam Pro`
+- **Body & Content:** `JetBrains Mono`
   - Style: Medium weights, italicized blockquotes for the "AI Verdict."
   - Used for: Roast descriptions, community comments, and manifesto text.
+- **Sans Fallback:** `Inter`
+  - Used for: UI elements and general fallback.
 
 ## 4. Spacing & Grid
 - **Container Max-Width:** `1280px` (7xl)
@@ -52,6 +54,7 @@ The signature container for data display.
 
 ### Neo-Brutalist Buttons
 - **Style:** 2px solid border, uppercase bold text.
+- **Primary Variant:** Gradient fill (`from-accent-danger via-orange-vibrant to-accent-warning`), hard neo shadow with danger color.
 - **Action:** `active:translate-x-[2px] active:translate-y-[2px]` - mimics a physical push-button mechanism.
 - **Shadows:** Hard shadows with 0 blur, specifically the "Neo Shadow": `4px 4px 0px 0px rgba(255, 78, 78, 0.5)`.
 

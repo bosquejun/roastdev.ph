@@ -25,7 +25,7 @@ function extractMetadata(
 ): SiteMetadata | null {
   for (const message of messages) {
     for (const part of message.parts) {
-      if (part.type === "tool-scrape" && part.output?.metadata) {
+      if (part.type === "tool-scrapeSite" && part.output?.metadata) {
         const md = part.output.metadata
         return {
           favicon: md.favicon,
@@ -45,16 +45,18 @@ function extractMetadata(
 }
 
 const ROAST_QUIPS = [
-  "Summoning our most brutally honest AI... wag kang matakot.",
-  "Reading your landing page. Iniisip na namin kung saan magsisimula.",
-  "Consulting the ghosts of failed startups past...",
-  "Scraping your site. Ang daming red flags, sandali lang.",
-  "Preparing the verbal beatdown. Hinga muna tayo.",
-  "Our AI is clutching its chest. May nahanap na.",
-  "Counting the number of 'revolutionary' claims on your homepage...",
-  "Loading the pain. Please hold.",
-  "Your startup is about to get cooked. Medium-rare or well-done?",
-  "Firecrawling through your site like a curious tita at a reunion.",
+  "Reading your site. Aray.",
+  "Our AI needed a moment. May nakita.",
+  "Loading... just like your homepage.",
+  "Counting the buzzwords. Grabe.",
+  "Consulting the ghosts of dead startups. Marami silang sasabihin.",
+  "Your value prop is being autopsied. Hold.",
+  "Sus. Sige. Almost done.",
+  "The AI is clutching its chest. We found something.",
+  "Preparing the roast. Sana kaya mo.",
+  "Your landing page just made the AI cry. Almost ready.",
+  "Detecting delusion. Overloading. Sandali.",
+  "Almost done. Hinga muna.",
 ]
 
 function RoastSkeleton() {
@@ -137,7 +139,11 @@ export function ResultView({ host }: ResultViewProps) {
       prepareSendMessagesRequest() {
         return { body: { host } }
       },
+      credentials: "include",
     }),
+    onData(...args) {
+      console.log(args)
+    },
   })
 
   const handleRetry = () => {
@@ -155,6 +161,7 @@ export function ResultView({ host }: ResultViewProps) {
     () => messages.filter((m) => m.role !== "user"),
     [messages]
   )
+  console.log(roasterMessages)
 
   const metadata = useMemo(
     () =>

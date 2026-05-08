@@ -9,7 +9,7 @@ import { RoastPreview } from "./features/home/roast-preview";
 import { Manifesto } from "./features/home/manifesto";
 
 const RailCross = () => (
-  <div className="relative shrink-0 size-3 flex items-center justify-center">
+  <div className="relative z-[70] shrink-0 size-3 flex items-center justify-center">
     <div
       className="absolute h-px w-full"
       style={{ background: "linear-gradient(90deg, #FF4E4E, #FACC15)" }}
@@ -34,7 +34,7 @@ export function HomeContent() {
       </div>
 
       {/* Fixed horizontal rail at bottom of navbar with centered dots */}
-      <div className="fixed top-[80px] left-0 right-0 z-[60] pointer-events-none">
+      <div className="fixed top-[80px] left-0 right-0 z-[70] pointer-events-none">
         {/* The rail line */}
         <div className="h-px bg-border w-full" />
         {/* Crosses centered on the rail × vertical rail intersection */}

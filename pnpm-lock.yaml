@@ -42,6 +42,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.75.0(react@19.2.4))
+      '@mendable/firecrawl-js':
+        specifier: ^4.22.2
+        version: 4.22.2
       '@upstash/ratelimit':
         specifier: ^2.0.8
         version: 2.0.8(@upstash/redis@1.38.0)

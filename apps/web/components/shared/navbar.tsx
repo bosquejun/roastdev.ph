@@ -1,7 +1,7 @@
 import Link from "next/link"
-import { Terminal, Code } from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
 import Image from "next/image"
+import { Show, SignUpButton, UserButton } from "@clerk/nextjs"
 
 export function Navbar() {
   return (
@@ -18,24 +18,24 @@ export function Navbar() {
             />
           </Link>
           <div className="hidden items-center gap-6 md:flex">
-            <a
+            {/*<Link
               className="border-b-2 border-accent-warning pb-1 text-sm font-medium text-accent-warning transition-colors hover:text-accent-danger"
-              href="#"
+              href="/#"
             >
               Roasts
-            </a>
-            <a
+            </Link>
+            <Link
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-accent-danger"
-              href="#"
+              href="/#"
             >
               Leaderboard
-            </a>
-            <a
+            </Link>
+            <Link
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-accent-danger"
-              href="#"
+              href="/#"
             >
               Archives
-            </a>
+            </Link>*/}
             <Link
               href="/submit"
               className="text-sm font-bold tracking-wider uppercase transition-colors hover:text-accent-danger"
@@ -45,10 +45,19 @@ export function Navbar() {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <Button variant="ghost">Sign in</Button>
-          <Button className="hidden border-2 border-border bg-gradient-to-r from-accent-danger via-orange-vibrant to-accent-warning px-6 py-2 text-xs font-bold text-white uppercase shadow-[4px_4px_0px_0px_#7f1d1d] transition-all hover:brightness-105 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none md:block">
-            Join the Roast
-          </Button>
+          <Show when="signed-out">
+            <Link href="/auth/sign-in">
+              <Button variant="ghost">Sign in</Button>
+            </Link>
+            <SignUpButton mode="modal">
+              <Button className="hidden border-2 border-border bg-gradient-to-r from-accent-danger via-orange-vibrant to-accent-warning px-6 py-2 text-xs font-bold text-white uppercase shadow-[4px_4px_0px_0px_#7f1d1d] transition-all hover:brightness-105 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none md:block">
+                Join the Roast
+              </Button>
+            </SignUpButton>
+          </Show>
+          <Show when="signed-in">
+            <UserButton showName />
+          </Show>
         </div>
       </nav>
     </header>
