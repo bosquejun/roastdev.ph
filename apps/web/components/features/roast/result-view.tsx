@@ -8,7 +8,7 @@ import { Skeleton } from "@workspace/ui/components/skeleton"
 import { TypingAnimation } from "@workspace/ui/components/typing-animation"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 
 const ROAST_QUIPS = [
@@ -122,7 +122,16 @@ export function ResultView({ host }: ResultViewProps) {
     })
   }, [])
 
-  const roasterMessages = messages.filter((m) => m.role !== "user")
+  const roasterMessages = useMemo(
+    () => messages.filter((m) => m.role !== "user"),
+    [messages]
+  )
+
+  const hasStreaming = useMemo(() => {
+    return roasterMessages.some((m) =>
+      m.parts.some((part) => part.type === "text")
+    )
+  }, [roasterMessages]) // Only re-runs if the messages array reference changes
 
   return (
     <motion.div
@@ -212,7 +221,8 @@ export function ResultView({ host }: ResultViewProps) {
       <div className="mx-auto max-w-3xl space-y-2">
         <AnimatePresence mode="wait">
           {/* submitted or streaming with no content yet — waiting for first byte */}
-          {(status === "submitted" || status === "streaming") && (
+          {(status === "submitted" ||
+            (status === "streaming" && !hasStreaming)) && (
             <motion.div
               key="loading"
               initial={{ opacity: 0 }}
