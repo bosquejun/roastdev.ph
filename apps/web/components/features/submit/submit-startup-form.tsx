@@ -8,7 +8,6 @@ import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { AlertCircle, Loader } from "lucide-react";
-import { submitStartup } from "@/app/actions/submit";
 import { SubmitStartupSchema, submitStartupSchema } from "@/lib/schemas";
 
 const FOCUS_OPTIONS = [
@@ -43,15 +42,15 @@ export function SubmitStartupForm() {
   const onSubmit = async (data: SubmitStartupSchema) => {
     setIsSubmitting(true);
 
-    const formData = new FormData();
-    formData.set("url", data.url);
-    formData.set("companyName", data.companyName);
-    formData.set("description", data.description || "");
-    formData.set("focusAreas", JSON.stringify(data.focusAreas));
+    const res = await fetch("/api/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: data.url }),
+    });
 
-    const result = await submitStartup(formData);
+    const result = await res.json();
 
-    if (result) {
+    if (result.hash) {
       router.push(`/roasted/${result.hash}`);
     }
 

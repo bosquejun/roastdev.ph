@@ -73,7 +73,7 @@ export function LandingHero() {
             </span>
           </div>
         </div>
-        <h1 className="mx-auto mb-8 max-w-4xl text-5xl leading-[1.1] font-bold uppercase italic md:text-7xl">
+        <h1 className="mx-auto mb-8 max-w-4xl text-5xl leading-[1.1] font-bold uppercase md:text-7xl">
           Your startup is probably{" "}
           <SquigglyText
             stepDuration={90}

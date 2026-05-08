@@ -101,6 +101,9 @@ export function ResultView({ host }: ResultViewProps) {
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/roast",
+      body: {
+        host,
+      },
     }),
     onData: (dataPart) => {
       console.log({ dataPart })
@@ -132,6 +135,8 @@ export function ResultView({ host }: ResultViewProps) {
       m.parts.some((part) => part.type === "text")
     )
   }, [roasterMessages]) // Only re-runs if the messages array reference changes
+
+  console.log({ status })
 
   return (
     <motion.div
@@ -222,6 +227,7 @@ export function ResultView({ host }: ResultViewProps) {
         <AnimatePresence mode="wait">
           {/* submitted or streaming with no content yet — waiting for first byte */}
           {(status === "submitted" ||
+            status === "ready" ||
             (status === "streaming" && !hasStreaming)) && (
             <motion.div
               key="loading"
