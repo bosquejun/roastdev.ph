@@ -11,6 +11,50 @@ import { DefaultChatTransport } from "ai"
 import { useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 
+interface SiteMetadata {
+  ogImage?: string
+  ogTitle?: string
+  title?: string
+  ogDescription?: string
+  description?: string
+  category?: string
+  language?: string
+  keywords?: string
+}
+
+function extractMetadata(
+  messages: {
+    parts: {
+      type: string
+      toolCallId?: string
+      output?: {
+        metadata?: Record<string, string>
+        answer?: string
+      }
+      text?: string
+    }[]
+  }[]
+): SiteMetadata | null {
+  for (const message of messages) {
+    for (const part of message.parts) {
+      if (part.type === "tool-scrape" && part.output?.metadata) {
+        const md = part.output.metadata
+        return {
+          ogImage: md.ogImage || md["og:image"],
+          ogTitle: md.ogTitle || md["og:title"] || md.title,
+          title: md.title,
+          ogDescription:
+            md.ogDescription || md["og:description"] || md.description,
+          category: md.category,
+          language: md.language,
+          keywords: md.keywords,
+        }
+      }
+    }
+  }
+  return null
+}
+
 const ROAST_QUIPS = [
   "Summoning our most brutally honest AI... wag kang matakot.",
   "Reading your landing page. Iniisip na namin kung saan magsisimula.",
@@ -98,7 +142,7 @@ interface ResultViewProps {
 
 export function ResultView({ host }: ResultViewProps) {
   const isSentRef = useRef<boolean>(null)
-  const { messages, sendMessage, status } = useChat({
+  const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/roast",
       body: {
@@ -130,13 +174,31 @@ export function ResultView({ host }: ResultViewProps) {
     [messages]
   )
 
+  const metadata = useMemo(
+    () =>
+      extractMetadata(
+        roasterMessages as {
+          parts: {
+            type: string
+            toolCallId?: string
+            output?: {
+              metadata?: Record<string, string>
+              answer?: string
+            }
+            text?: string
+          }[]
+        }[]
+      ),
+    [roasterMessages]
+  )
+
   const hasStreaming = useMemo(() => {
     return roasterMessages.some((m) =>
       m.parts.some((part) => part.type === "text")
     )
   }, [roasterMessages]) // Only re-runs if the messages array reference changes
 
-  console.log({ status })
+  console.log({ roasterMessages })
 
   return (
     <motion.div
@@ -205,21 +267,51 @@ export function ResultView({ host }: ResultViewProps) {
             d="M12 6v12m6-6H6"
           />
         </svg>
-        <div className="flex items-center gap-3 border border-border bg-card p-4">
-          <img
-            src={`https://www.google.com/s2/favicons?domain=${host}&sz=64`}
-            alt="favicon"
-            className="h-8 w-8 rounded-md"
-          />
-          <span className="text-lg font-semibold">{host}</span>
-          <Link
-            href={`https://${host}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-auto flex items-center justify-center gap-2 rounded-lg bg-accent-danger px-4 py-2 text-sm font-semibold text-white transition-all hover:opacity-90"
-          >
-            Visit Site <MoveUpRight className="size-4" />
-          </Link>
+        <div className="flex flex-col gap-3 border border-border bg-card p-4">
+          <div className="flex items-center gap-3">
+            <img
+              src={`https://www.google.com/s2/favicons?domain=${host}&sz=64`}
+              alt="favicon"
+              className="h-8 w-8 rounded-md"
+            />
+            <div className="flex flex-1 flex-col gap-1">
+              <span className="text-lg font-semibold">
+                {metadata?.ogTitle || metadata?.title || host}
+              </span>
+              {metadata?.ogDescription ? (
+                <span className="line-clamp-1 text-xs text-muted-foreground">
+                  {metadata.ogDescription}
+                </span>
+              ) : (
+                <Skeleton className="h-3 w-48" />
+              )}
+            </div>
+            <Link
+              href={`https://${host}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 rounded-lg bg-accent-danger px-4 py-2 text-sm font-semibold text-white transition-all hover:opacity-90"
+            >
+              Visit Site <MoveUpRight className="size-4" />
+            </Link>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {metadata?.category && (
+              <span className="rounded-full bg-accent-danger/10 px-2.5 py-0.5 text-[10px] font-medium text-accent-danger">
+                {metadata.category}
+              </span>
+            )}
+            {metadata?.language && (
+              <span className="rounded-full bg-muted px-2.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                {metadata.language.toUpperCase()}
+              </span>
+            )}
+            {metadata?.keywords && (
+              <span className="line-clamp-1 text-xs text-muted-foreground">
+                {metadata.keywords.split(",").slice(0, 3).join(", ")}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
@@ -227,7 +319,6 @@ export function ResultView({ host }: ResultViewProps) {
         <AnimatePresence mode="wait">
           {/* submitted or streaming with no content yet — waiting for first byte */}
           {(status === "submitted" ||
-            status === "ready" ||
             (status === "streaming" && !hasStreaming)) && (
             <motion.div
               key="loading"

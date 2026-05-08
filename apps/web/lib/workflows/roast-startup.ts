@@ -1,13 +1,19 @@
-import { getWritable } from "workflow"
+import { getStepMetadata, getWritable, RetryableError } from "workflow"
 import {
   createUIMessageStream,
   type ModelMessage,
   type UIMessageChunk,
+  AISDKError,
 } from "ai"
 import { roasterAgent } from "../ai/roaster-agent/agent"
 
-const agentStep = async (messages: ModelMessage[]) => {
+const MAX_RETRIES = 3
+const BASE_DELAY_MS = 1000
+
+const agentStep = async (messages: ModelMessage[], retryCount = 0) => {
   "use step"
+
+  const metadata = getStepMetadata()
 
   const writable = getWritable<UIMessageChunk>()
   const writer = writable.getWriter()
@@ -28,9 +34,21 @@ const agentStep = async (messages: ModelMessage[]) => {
   })
 
   for await (const chunk of stream as unknown as AsyncIterable<UIMessageChunk>) {
-    if (chunk.type === "tool-output-available") {
-      console.log("Scraped Data:", chunk.output)
-      // You can process the data here or send it to another service
+    switch (chunk.type) {
+      case "error": {
+        const { errorText } = chunk
+        if (errorText.includes("Rate limit exceeded")) {
+          const jitter = Math.random() * 1000
+          const retryAfter = Math.ceil(metadata.attempt ** 2 * 5_000 * jitter)
+
+          throw new RetryableError(
+            `Roasting Error due to rate limit. Backing off for ${retryAfter / 1000}s...`,
+            {
+              retryAfter,
+            }
+          )
+        }
+      }
     }
     await writer.write(chunk)
   }
