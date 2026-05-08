@@ -38,7 +38,7 @@ export async function roastUrl(formData: FormData): Promise<string | null> {
 
   const normalizedUrl = normalizeUrl(url);
 
-  let resolved: string;
+  let resolved: string | null;
   try {
     resolved = await resolveRedirects(normalizedUrl);
     if (!resolved) {

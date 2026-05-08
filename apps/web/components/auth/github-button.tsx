@@ -1,19 +1,16 @@
 "use client";
 
 import { useSignIn } from "@clerk/nextjs";
-import { Github } from "lucide-react";
 
 export function GitHubButton() {
-  const { signIn, isLoaded } = useSignIn();
+  const { signIn } = useSignIn();
 
   async function handleGitHubSignIn() {
-    if (!isLoaded) return;
-
     try {
-      await signIn.authenticateWithRedirect({
+      await signIn.sso({
         strategy: "oauth_github",
         redirectUrl: "/auth/callback",
-        redirectUrlComplete: "/",
+        redirectCallbackUrl: "/",
       });
     } catch (error) {
       console.error("OAuth error:", error);
@@ -28,7 +25,6 @@ export function GitHubButton() {
         boxShadow: "4px 4px 0px 0px rgba(255, 78, 78, 0.5)",
       }}
     >
-      <Github className="size-5" />
       Continue with GitHub
     </button>
   );
