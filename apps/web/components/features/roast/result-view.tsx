@@ -3,24 +3,12 @@
 "use client"
 
 import { motion, AnimatePresence } from "motion/react"
-import { MoveUpRight, AlertTriangle, RotateCcw } from "lucide-react"
+import { AlertTriangle, RotateCcw } from "lucide-react"
 import { Skeleton } from "@workspace/ui/components/skeleton"
-import { TypingAnimation } from "@workspace/ui/components/typing-animation"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
 import { useEffect, useMemo, useRef, useState } from "react"
-import Link from "next/link"
-
-interface SiteMetadata {
-  ogImage?: string
-  ogTitle?: string
-  title?: string
-  ogDescription?: string
-  description?: string
-  category?: string
-  language?: string
-  keywords?: string
-}
+import { SiteMetadataCard, type SiteMetadata } from "./site-metadata-card"
 
 function extractMetadata(
   messages: {
@@ -40,6 +28,7 @@ function extractMetadata(
       if (part.type === "tool-scrape" && part.output?.metadata) {
         const md = part.output.metadata
         return {
+          favicon: md.favicon,
           ogImage: md.ogImage || md["og:image"],
           ogTitle: md.ogTitle || md["og:title"] || md.title,
           title: md.title,
@@ -142,31 +131,24 @@ interface ResultViewProps {
 
 export function ResultView({ host }: ResultViewProps) {
   const isSentRef = useRef<boolean>(null)
-  const { messages, sendMessage, status, error } = useChat({
+  const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/roast",
-      body: {
-        host,
+      prepareSendMessagesRequest() {
+        return { body: { host } }
       },
     }),
-    onData: (dataPart) => {
-      console.log({ dataPart })
-    },
   })
 
   const handleRetry = () => {
-    sendMessage({
-      text: `Roast this startup's landing page https://${host}. Seven beats. No mercy. Sige na.`,
-    })
+    sendMessage()
   }
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: fire once on mount
   useEffect(() => {
     if (isSentRef.current) return
     isSentRef.current = true
-    sendMessage({
-      text: `Roast this startup's landing page https://${host}. Seven beats. No mercy. Sige na.`,
-    })
+    sendMessage()
   }, [])
 
   const roasterMessages = useMemo(
@@ -197,8 +179,6 @@ export function ResultView({ host }: ResultViewProps) {
       m.parts.some((part) => part.type === "text")
     )
   }, [roasterMessages]) // Only re-runs if the messages array reference changes
-
-  console.log({ roasterMessages })
 
   return (
     <motion.div
@@ -267,52 +247,7 @@ export function ResultView({ host }: ResultViewProps) {
             d="M12 6v12m6-6H6"
           />
         </svg>
-        <div className="flex flex-col gap-3 border border-border bg-card p-4">
-          <div className="flex items-center gap-3">
-            <img
-              src={`https://www.google.com/s2/favicons?domain=${host}&sz=64`}
-              alt="favicon"
-              className="h-8 w-8 rounded-md"
-            />
-            <div className="flex flex-1 flex-col gap-1">
-              <span className="text-lg font-semibold">
-                {metadata?.ogTitle || metadata?.title || host}
-              </span>
-              {metadata?.ogDescription ? (
-                <span className="line-clamp-1 text-xs text-muted-foreground">
-                  {metadata.ogDescription}
-                </span>
-              ) : (
-                <Skeleton className="h-3 w-48" />
-              )}
-            </div>
-            <Link
-              href={`https://${host}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-lg bg-accent-danger px-4 py-2 text-sm font-semibold text-white transition-all hover:opacity-90"
-            >
-              Visit Site <MoveUpRight className="size-4" />
-            </Link>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            {metadata?.category && (
-              <span className="rounded-full bg-accent-danger/10 px-2.5 py-0.5 text-[10px] font-medium text-accent-danger">
-                {metadata.category}
-              </span>
-            )}
-            {metadata?.language && (
-              <span className="rounded-full bg-muted px-2.5 py-0.5 text-[10px] font-medium text-muted-foreground">
-                {metadata.language.toUpperCase()}
-              </span>
-            )}
-            {metadata?.keywords && (
-              <span className="line-clamp-1 text-xs text-muted-foreground">
-                {metadata.keywords.split(",").slice(0, 3).join(", ")}
-              </span>
-            )}
-          </div>
-        </div>
+        <SiteMetadataCard host={host} metadata={metadata} />
       </div>
 
       <div className="mx-auto max-w-3xl space-y-2">

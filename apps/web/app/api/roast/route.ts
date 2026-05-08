@@ -10,8 +10,10 @@ import {
   getClientKey,
   createRateLimitHeaders,
 } from "@/lib/rate-limit"
+import { redis } from "@/lib/redis"
+import objectHash from "object-hash"
 
-const RATE_LIMIT_LIMIT = 10
+const RATE_LIMIT_LIMIT = 1
 const RATE_LIMIT_WINDOW = "1m"
 
 export async function POST(req: Request) {
@@ -34,10 +36,24 @@ export async function POST(req: Request) {
     })
   }
 
-  const { messages }: { messages: UIMessage[] } = await req.json()
-  const modelMessages = await convertToModelMessages(messages)
+  const { host }: { host: string } = await req.json()
 
-  const run = await start(roastStartupWorkflow, [modelMessages])
+  const roastKey = `${host}:roasted-message`
+
+  console.log({ roastKey })
+  // Check if we have a cached response
+  const cached = (await redis.get(roastKey)) as string | null
+
+  console.log(`Has cached roasted: ${Boolean(cached)}`)
+
+  if (cached != null) {
+    return new Response(cached, {
+      status: 200,
+      headers: { "Content-Type": "text/plain" },
+    })
+  }
+
+  const run = await start(roastStartupWorkflow, [{ host }])
 
   return createUIMessageStreamResponse({
     stream: run.readable,

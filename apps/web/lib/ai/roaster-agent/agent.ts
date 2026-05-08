@@ -5,16 +5,18 @@ import { FirecrawlTools } from "firecrawl-aisdk"
 import { redis } from "@/lib/redis"
 
 const { scrape } = FirecrawlTools({
-  scrape: { formats: ["markdown"], onlyMainContent: true, maxAge: 3_600_000 },
+  scrape: {
+    formats: ["markdown", "html"],
+    onlyMainContent: true,
+    maxAge: 3_600_000,
+  },
 })
 
 const cachedScrape = tool({
   ...scrape,
   execute: async (args: any) => {
-    const cacheKey = `scrape:${args.url}`
+    const cacheKey = `${new URL(args.url).host}:scrape-data`
     const cachedResult = await redis.get(cacheKey)
-
-    console.log(`cached scraped url: ${cachedResult}`)
 
     if (cachedResult) return cachedResult
 

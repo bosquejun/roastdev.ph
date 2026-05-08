@@ -1,17 +1,11 @@
+import { SiteMetadataCardSkeleton } from "@/components/features/roast/site-metadata-card"
 import { Skeleton } from "@workspace/ui/components/skeleton"
 
 export default function Loading() {
   return (
     <div className="px-8 py-10">
       <div className="mx-auto mb-12 max-w-2xl">
-        <div className="flex items-center gap-3 border border-border bg-card p-4">
-          <Skeleton className="h-8 w-8 rounded-md" />
-          <Skeleton className="h-5 w-48" />
-          <div className="ml-auto flex gap-2">
-            <Skeleton className="h-9 w-24" />
-            <Skeleton className="h-9 w-20" />
-          </div>
-        </div>
+        <SiteMetadataCardSkeleton host="..." />
       </div>
       <div className="mx-auto max-w-3xl space-y-2">
         <div className="space-y-2.5">

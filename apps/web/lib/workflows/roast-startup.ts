@@ -1,17 +1,13 @@
 import { getStepMetadata, getWritable, RetryableError } from "workflow"
-import {
-  createUIMessageStream,
-  type ModelMessage,
-  type UIMessageChunk,
-  AISDKError,
-} from "ai"
+import { createUIMessageStream, type UIMessageChunk } from "ai"
 import { roasterAgent } from "../ai/roaster-agent/agent"
+import { redis } from "../redis"
 
-const MAX_RETRIES = 3
-const BASE_DELAY_MS = 1000
-
-const agentStep = async (messages: ModelMessage[], retryCount = 0) => {
+const agentStep = async ({ host }: { host: string }) => {
   "use step"
+  const cacheKey = `${host}:roasted-message`
+
+  console.log({ cacheKey })
 
   const metadata = getStepMetadata()
 
@@ -21,13 +17,23 @@ const agentStep = async (messages: ModelMessage[], retryCount = 0) => {
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
       const result = await roasterAgent.stream({
-        messages,
+        messages: [
+          {
+            role: "user",
+            content: `Roast this startup's landing page ${host}. Seven beats. No mercy. Sige na.`,
+          },
+        ],
       })
 
       writer.merge(
         result.toUIMessageStream({
           sendSources: true,
           sendReasoning: true,
+          async onFinish({ messages }) {
+            console.log(`Finished roasting. Storing cache. ${cacheKey}`)
+            // Cache the response text:
+            await redis.set(cacheKey, messages)
+          },
         })
       )
     },
@@ -38,8 +44,7 @@ const agentStep = async (messages: ModelMessage[], retryCount = 0) => {
       case "error": {
         const { errorText } = chunk
         if (errorText.includes("Rate limit exceeded")) {
-          const jitter = Math.random() * 1000
-          const retryAfter = Math.ceil(metadata.attempt ** 2 * 5_000 * jitter)
+          const retryAfter = Math.ceil(metadata.attempt ** 2 * 5_000)
 
           throw new RetryableError(
             `Roasting Error due to rate limit. Backing off for ${retryAfter / 1000}s...`,
@@ -56,8 +61,8 @@ const agentStep = async (messages: ModelMessage[], retryCount = 0) => {
   await writer.close()
 }
 
-export async function roastStartupWorkflow(messages: ModelMessage[]) {
+export async function roastStartupWorkflow({ host }: { host: string }) {
   "use workflow"
 
-  await agentStep(messages)
+  await agentStep({ host })
 }
