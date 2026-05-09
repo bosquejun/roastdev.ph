@@ -25,7 +25,7 @@ export function Footer() {
             GitHub
           </a>
           <a
-            href="https://discord.com"
+            href={process.env.NEXT_PUBLIC_DISCORD_LINK}
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs text-muted-foreground transition-colors hover:text-white"

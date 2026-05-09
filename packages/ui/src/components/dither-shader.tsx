@@ -68,9 +68,9 @@ function parseColor(color: string): [number, number, number] {
     const hex = color.slice(1)
     if (hex.length === 3) {
       return [
-        parseInt(hex[0] + hex[0], 16),
-        parseInt(hex[1] + hex[1], 16),
-        parseInt(hex[2] + hex[2], 16),
+        parseInt(hex[0]! + hex[0]!, 16),
+        parseInt(hex[1]! + hex[1]!, 16),
+        parseInt(hex[2]! + hex[2]!, 16),
       ]
     }
     return [
@@ -81,7 +81,7 @@ function parseColor(color: string): [number, number, number] {
   }
   const match = color.match(/rgb\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\)/i)
   if (match) {
-    return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])]
+    return [parseInt(match[1]!), parseInt(match[2]!), parseInt(match[3]!)]
   }
   return [0, 0, 0]
 }
@@ -131,7 +131,7 @@ export const DitherShader: React.FC<DitherShaderProps> = ({
 
   const parsedPrimaryColor = parseColor(primaryColor)
   const parsedSecondaryColor = parseColor(secondaryColor)
-  const parsedCustomPalette = customPalette.map(parseColor)
+  const parsedCustomPalette = customPalette?.map(parseColor) ?? []
 
   const applyDithering = useCallback(
     (
@@ -190,7 +190,7 @@ export const DitherShader: React.FC<DitherShaderProps> = ({
 
           switch (ditherMode) {
             case "bayer":
-              ditherThreshold = bayerMatrix[matrixY][matrixX] / matrixScale
+              ditherThreshold = bayerMatrix[matrixY]![matrixX]! / matrixScale
               break
             case "halftone": {
               const angle = Math.PI / 4
@@ -216,7 +216,7 @@ export const DitherShader: React.FC<DitherShaderProps> = ({
               break
             }
             default:
-              ditherThreshold = bayerMatrix[matrixY][matrixX] / matrixScale
+              ditherThreshold = bayerMatrix[matrixY]![matrixX]! / matrixScale
           }
 
           // Adjust threshold with user setting
@@ -242,17 +242,16 @@ export const DitherShader: React.FC<DitherShaderProps> = ({
               if (parsedCustomPalette.length === 2) {
                 const shouldBeDark = luminance < ditherThreshold
                 outputColor = shouldBeDark
-                  ? parsedCustomPalette[0]
-                  : parsedCustomPalette[1]
+                  ? parsedCustomPalette[0]!
+                  : parsedCustomPalette[1]!
               } else {
-                // Quantize to closest palette color with dithering
                 const adjustedLuminance =
                   luminance + (ditherThreshold - 0.5) * 0.5
                 const paletteIndex = Math.floor(
                   clamp(adjustedLuminance, 0, 1) *
                     (parsedCustomPalette.length - 1)
                 )
-                outputColor = parsedCustomPalette[paletteIndex]
+                outputColor = parsedCustomPalette[paletteIndex]!
               }
               break
             }

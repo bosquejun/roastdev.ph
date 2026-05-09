@@ -45,7 +45,7 @@ export function Navbar() {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <Show when="signed-out">
+          {/*<Show when="signed-out">
             <Link href="/auth/sign-in">
               <Button variant="ghost">Sign in</Button>
             </Link>
@@ -57,7 +57,7 @@ export function Navbar() {
           </Show>
           <Show when="signed-in">
             <UserButton showName />
-          </Show>
+          </Show>*/}
         </div>
       </nav>
     </header>
