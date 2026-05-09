@@ -45,8 +45,8 @@ function extractMetadata(
 }
 
 const ROAST_QUIPS = [
-  "Reading your site. Aray.",
-  "Our AI needed a moment. May nakita.",
+  "Reading your site. Aray koooo.",
+  "Our AI needed a moment. May nakita di kaaya-aya.",
   "Loading... just like your homepage.",
   "Counting the buzzwords. Grabe.",
   "Consulting the ghosts of dead startups. Marami silang sasabihin.",
@@ -58,6 +58,21 @@ const ROAST_QUIPS = [
   "Detecting delusion. Overloading. Sandali.",
   "Almost done. Hinga muna.",
 ]
+
+function renderRoastText(text: string) {
+  const parts = text.split(/(\*[^*]+\*)/g)
+  return parts.map((part, i) => {
+    const match = part.match(/^\*([^*]+)\*$/)
+    if (match) {
+      return (
+        <strong key={i} className="font-bold text-accent-danger">
+          {match[1]}
+        </strong>
+      )
+    }
+    return part
+  })
+}
 
 function RoastSkeleton() {
   const [quipIndex, setQuipIndex] = useState(0)
@@ -100,29 +115,71 @@ function RoastSkeleton() {
   )
 }
 
-function RoastError({ onRetry }: { onRetry: () => void }) {
+function RoastError({
+  onRetry,
+  isRateLimit,
+  resetAfter,
+}: {
+  onRetry: () => void
+  isRateLimit?: boolean
+  resetAfter: number | null
+}) {
+  const formatTimeRemaining = (resetTs: number) => {
+    const now = Date.now()
+    const diffMs = resetTs - now
+    if (diffMs <= 0) return "less than a minute"
+    const totalSecs = Math.floor(diffMs / 1000)
+    const hours = Math.floor(totalSecs / 3600)
+    const minutes = Math.floor((totalSecs % 3600) / 60)
+    const parts = []
+    if (hours > 0) parts.push(`${hours}h`)
+    if (minutes > 0) parts.push(`${minutes}m`)
+    return parts.join(" ") || "less than a minute"
+  }
+
   return (
     <div className="flex flex-col items-center gap-6 py-16 text-center">
-      <div className="border-2 border-accent-danger p-4">
-        <AlertTriangle className="h-10 w-10 text-accent-danger" />
+      <div
+        className={`border-2 p-4 ${isRateLimit ? "border-accent-warning" : "border-accent-danger"}`}
+      >
+        <AlertTriangle
+          className={`h-10 w-10 ${isRateLimit ? "text-accent-warning" : "text-accent-danger"}`}
+        />
       </div>
       <div className="space-y-2">
-        <p className="text-lg font-bold tracking-wide uppercase">
-          The AI Chickened Out
-        </p>
-        <p className="text-sm text-muted-foreground">
-          Something went wrong mid-roast. Even our AI has bad days.{" "}
-          <span className="italic">Nanlumo yata.</span>
-        </p>
+        {isRateLimit ? (
+          <>
+            <p className="text-lg font-bold tracking-wide text-accent-warning uppercase">
+              Daily Limit Reached
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {resetAfter && resetAfter > 0
+                ? `You've reached your daily limit. Try again in ${formatTimeRemaining(resetAfter)}.`
+                : "You've used your daily roasts. Come back tomorrow."}
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="text-lg font-bold tracking-wide uppercase">
+              The AI Chickened Out
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Something went wrong mid-roast. Even our AI has bad days.{" "}
+              <span className="italic">Nanlumo yata.</span>
+            </p>
+          </>
+        )}
       </div>
-      <button
-        type="button"
-        onClick={onRetry}
-        className="flex items-center gap-2 border-2 border-border px-6 py-2 text-sm font-bold tracking-wider uppercase transition-all hover:border-accent-danger hover:text-accent-danger active:translate-x-[2px] active:translate-y-[2px]"
-      >
-        <RotateCcw className="h-4 w-4" />
-        Try Again
-      </button>
+      {!isRateLimit && (
+        <button
+          type="button"
+          onClick={onRetry}
+          className="flex items-center gap-2 border-2 border-border px-6 py-2 text-sm font-bold tracking-wider uppercase transition-all hover:border-accent-danger hover:text-accent-danger active:translate-x-[2px] active:translate-y-[2px]"
+        >
+          <RotateCcw className="h-4 w-4" />
+          Try Again
+        </button>
+      )}
     </div>
   )
 }
@@ -133,6 +190,7 @@ interface ResultViewProps {
 
 export function ResultView({ host }: ResultViewProps) {
   const isSentRef = useRef<boolean>(null)
+  const [resetAfter, setResetAfter] = useState<number | null>(null)
   const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/roast",
@@ -140,6 +198,16 @@ export function ResultView({ host }: ResultViewProps) {
         return { body: { host } }
       },
       credentials: "include",
+      fetch: async (input, init) => {
+        const response = await fetch(input, init)
+        if (response.status === 429) {
+          const resetAt =
+            Number(response.headers.get("X-Ratelimit-Reset")) || -1
+          setResetAfter(resetAt)
+          throw new Error("Rate limit exceeded")
+        }
+        return response
+      },
     }),
     onData(...args) {
       console.log(args)
@@ -161,7 +229,6 @@ export function ResultView({ host }: ResultViewProps) {
     () => messages.filter((m) => m.role !== "user"),
     [messages]
   )
-  console.log(roasterMessages)
 
   const metadata = useMemo(
     () =>
@@ -282,7 +349,11 @@ export function ResultView({ host }: ResultViewProps) {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <RoastError onRetry={handleRetry} />
+              <RoastError
+                onRetry={handleRetry}
+                isRateLimit={!!resetAfter}
+                resetAfter={resetAfter}
+              />
             </motion.div>
           )}
         </AnimatePresence>
@@ -303,7 +374,7 @@ export function ResultView({ host }: ResultViewProps) {
                       lineHeight: 1.7,
                     }}
                   >
-                    {part.text}
+                    {renderRoastText(part.text ?? "")}
                   </span>
                 ) : null
               )}

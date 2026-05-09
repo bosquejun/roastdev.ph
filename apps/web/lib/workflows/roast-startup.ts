@@ -2,11 +2,13 @@ import { getStepMetadata, getWritable, RetryableError } from "workflow"
 import { createUIMessageStream, type UIMessageChunk } from "ai"
 import { roasterAgent } from "../ai/roaster-agent/agent"
 import { redis } from "../redis"
+import { UnsupportedSiteError } from "../ai/tools/scrape-site"
 
 export const ROAST_CACHE_KEY = (host: string) => `${host}:roasted-message`
 
 const agentStep = async ({ host }: { host: string }) => {
   "use step"
+
   const cacheKey = ROAST_CACHE_KEY(host)
 
   const metadata = getStepMetadata()
@@ -18,25 +20,28 @@ const agentStep = async ({ host }: { host: string }) => {
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
-      const result = await roasterAgent.stream({
-        messages: [
-          {
-            role: "user",
-            content: `Roast this startup's landing page ${host}. Seven beats. No mercy. Sige na.`,
-          },
-        ],
-      })
-
-      writer.merge(
-        result.toUIMessageStream({
-          sendSources: true,
-          sendReasoning: true,
-          async onFinish({ messages }) {
-            console.log(`Finished roasting. Storing cache. ${cacheKey}`)
-            await redis.set(cacheKey, messages)
-          },
+      try {
+        const result = await roasterAgent.stream({
+          prompt: `Roast this startup's landing page ${host}. Seven beats. No mercy. Sige na.`,
         })
-      )
+
+        writer.merge(
+          result.toUIMessageStream({
+            sendSources: true,
+            sendReasoning: true,
+            async onFinish({ messages }) {
+              await redis.set(cacheKey, messages)
+
+              await redis.del(`${host}:workflow-run-id`)
+            },
+          })
+        )
+      } catch (error) {
+        if (error instanceof UnsupportedSiteError) {
+          throw error
+        }
+        throw error
+      }
     },
   })
 
@@ -53,6 +58,13 @@ const agentStep = async ({ host }: { host: string }) => {
               retryAfter,
             }
           )
+        }
+        if (
+          errorText.toLowerCase().includes("do not support this site") ||
+          errorText.toLowerCase().includes("unsupportedsiteerror") ||
+          errorText.toLowerCase().includes("site not supported")
+        ) {
+          throw new UnsupportedSiteError(errorText)
         }
       }
     }

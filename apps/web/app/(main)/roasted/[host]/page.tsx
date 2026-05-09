@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import { normalizeUrl, resolveRedirects } from "@/lib/url"
+import { normalizeUrl, resolveUrl } from "@/lib/url"
 import { ResultView } from "@/components/features/roast/result-view"
 import { RoastedErrorPage } from "@/components/features/roast/roasted-error-page"
 
@@ -8,43 +8,19 @@ interface RoastedPageProps {
 }
 
 export default async function RoastedPage({ params }: RoastedPageProps) {
-  const { host } = await params
-  const rawHost = host
+  const { host: rawHost } = await params
 
-  const normalizedUrl = normalizeUrl(rawHost)
-  let urlHost: string
+  const normalizedHost = normalizeUrl(rawHost)
 
-  try {
-    urlHost = new URL(normalizedUrl).hostname
-  } catch {
+  const { host } = await resolveUrl(rawHost)
+
+  if (!host) {
     return <RoastedErrorPage host={rawHost} />
   }
 
-  if (!urlHost) {
-    return <RoastedErrorPage host={rawHost} />
+  if (normalizeUrl(host) !== normalizedHost) {
+    redirect(`/roasted/${host}`)
   }
 
-  const resolvedUrl = await resolveRedirects(normalizedUrl)
-
-  let finalHost = urlHost
-  if (resolvedUrl && resolvedUrl !== normalizedUrl) {
-    try {
-      const resolvedHost = new URL(resolvedUrl).hostname
-      const normalizedResolvedHost = normalizeUrl(resolvedHost).replace(
-        "https://",
-        ""
-      )
-      if (normalizedResolvedHost !== urlHost) {
-        finalHost = normalizedResolvedHost
-      }
-    } catch {
-      // ignore redirect resolution errors, proceed with valid host
-    }
-  }
-
-  if (finalHost !== urlHost) {
-    redirect(`/roasted/${finalHost}`)
-  }
-
-  return <ResultView host={finalHost} />
+  return <ResultView host={host} />
 }

@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { z } from "zod"
 
-const URL_REGEX = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/i;
+const URL_REGEX = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/i
 
 export const roastFormSchema = z.object({
   url: z
@@ -8,36 +8,34 @@ export const roastFormSchema = z.object({
     .min(1, "URL is required")
     .refine(
       (url) => {
-        const trimmed = url.trim();
-        if (trimmed.startsWith("http://")) return false;
-        let urlToCheck = trimmed;
-        if (
-          !trimmed.startsWith("http://") &&
-          !trimmed.startsWith("https://")
-        ) {
-          urlToCheck = `https://${trimmed}`;
+        const trimmed = url.trim()
+        if (trimmed.startsWith("http://")) return false
+        let urlToCheck = trimmed
+        if (!trimmed.startsWith("http://") && !trimmed.startsWith("https://")) {
+          urlToCheck = `https://${trimmed}`
         }
         try {
-          const parsed = new URL(urlToCheck);
+          const parsed = new URL(urlToCheck)
           if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
-            return false;
+            return false
           }
-          const hostname = parsed.hostname;
+          const hostname = parsed.hostname
           if (!hostname.includes(".") || hostname.endsWith(".")) {
-            return false;
+            return false
           }
-          return URL_REGEX.test(urlToCheck);
+          return URL_REGEX.test(urlToCheck)
         } catch {
-          return false;
+          return false
         }
       },
       {
-        message: "Please enter a valid URL (e.g., yourstartup.com or https://yourstartup.com)",
+        message:
+          "Please enter a valid URL (e.g., yourstartup.com or https://yourstartup.com)",
       }
     ),
-});
+})
 
-export type RoastFormSchema = z.infer<typeof roastFormSchema>;
+export type RoastFormSchema = z.infer<typeof roastFormSchema>
 
 export const submitStartupSchema = z.object({
   url: z
@@ -45,31 +43,29 @@ export const submitStartupSchema = z.object({
     .min(1, "URL is required")
     .refine(
       (url) => {
-        const trimmed = url.trim();
-        if (trimmed.startsWith("http://")) return false;
-        let urlToCheck = trimmed;
-        if (
-          !trimmed.startsWith("http://") &&
-          !trimmed.startsWith("https://")
-        ) {
-          urlToCheck = `https://${trimmed}`;
+        const trimmed = url.trim()
+        if (trimmed.startsWith("http://")) return false
+        let urlToCheck = trimmed
+        if (!trimmed.startsWith("http://") && !trimmed.startsWith("https://")) {
+          urlToCheck = `https://${trimmed}`
         }
         try {
-          const parsed = new URL(urlToCheck);
+          const parsed = new URL(urlToCheck)
           if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
-            return false;
+            return false
           }
-          const hostname = parsed.hostname;
+          const hostname = parsed.hostname
           if (!hostname.includes(".") || hostname.endsWith(".")) {
-            return false;
+            return false
           }
-          return URL_REGEX.test(urlToCheck);
+          return URL_REGEX.test(urlToCheck)
         } catch {
-          return false;
+          return false
         }
       },
       {
-        message: "Please enter a valid URL (e.g., yourstartup.com or https://yourstartup.com)",
+        message:
+          "Please enter a valid URL (e.g., yourstartup.com or https://yourstartup.com)",
       }
     ),
   companyName: z
@@ -81,6 +77,6 @@ export const submitStartupSchema = z.object({
     .max(300, "Description must be 300 characters or less")
     .optional(),
   focusAreas: z.array(z.string()).min(1, "Select at least one focus area"),
-});
+})
 
-export type SubmitStartupSchema = z.infer<typeof submitStartupSchema>;
+export type SubmitStartupSchema = z.infer<typeof submitStartupSchema>

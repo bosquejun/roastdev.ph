@@ -1,5 +1,5 @@
 interface SignInTerminalProps {
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 export function SignInTerminal({ children }: SignInTerminalProps) {
@@ -12,15 +12,13 @@ export function SignInTerminal({ children }: SignInTerminalProps) {
             <div className="size-3 rounded-full bg-[#ffbd2e]" />
             <div className="size-3 rounded-full bg-[#27c93f]" />
           </div>
-          <span className="ml-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+          <span className="ml-2 font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
             AUTH_TERMINAL
           </span>
         </div>
 
-        <div className="px-8 py-10 space-y-6">
-          {children}
-        </div>
+        <div className="space-y-6 px-8 py-10">{children}</div>
       </div>
     </div>
-  );
+  )
 }

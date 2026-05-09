@@ -16,23 +16,11 @@ export function Footer() {
         </Link>
 
         <div className="flex gap-6">
-          <Link
-            href="/"
-            className="text-xs text-muted-foreground transition-colors hover:text-white"
-          >
-            Roast
-          </Link>
-          <Link
-            href="/submit"
-            className="text-xs text-muted-foreground transition-colors hover:text-white"
-          >
-            Submit
-          </Link>
           <a
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-muted-foreground transition-colors hover:text-white"
+            className="pointer-events-none text-xs text-muted-foreground opacity-35 transition-colors hover:text-white"
           >
             GitHub
           </a>

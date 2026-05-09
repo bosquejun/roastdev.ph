@@ -1,10 +1,16 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
+import {
+  ANONYMOUS_SESSION_COOKIE_NAME,
+  setAnonSessionCookie,
+} from "./lib/http/anon-session"
 
 const isPublicRoute = createRouteMatcher([
   "/",
   "/auth/sign-in(.*)",
   "/auth/sign-up(.*)",
+  "/roasted/(.*)",
+  "/api/roast",
 ])
 
 const isWorkflowRoute = createRouteMatcher([
@@ -13,12 +19,18 @@ const isWorkflowRoute = createRouteMatcher([
 ])
 
 export default clerkMiddleware(async (auth, req) => {
+  const existingSessionId = req.cookies.get(
+    ANONYMOUS_SESSION_COOKIE_NAME
+  )?.value
+
   if (isWorkflowRoute(req)) {
-    return NextResponse.next()
+    return setAnonSessionCookie(NextResponse.next(), existingSessionId)
   }
   if (!isPublicRoute(req)) {
     await auth.protect()
   }
+
+  return setAnonSessionCookie(NextResponse.next(), existingSessionId)
 })
 
 export const config = {

@@ -5,18 +5,41 @@ import { z } from "zod"
 
 const firecrawl = new Firecrawl({ apiKey: process.env.FIRECRAWL_API_KEY! })
 
+export class UnsupportedSiteError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = "UnsupportedSiteError"
+  }
+}
+
 export async function scrapeSite(url: string) {
   const cacheKey = `${new URL(url).host}:scrape-data`
   const cachedResult = await redis.get(cacheKey)
 
   if (cachedResult) return cachedResult
 
-  const scrapeResponse = await firecrawl.scrape(url, {
-    formats: ["markdown"],
-  })
-  await redis.set(cacheKey, scrapeResponse)
+  try {
+    const scrapeResponse = await firecrawl.scrape(url, {
+      formats: ["markdown"],
+    })
 
-  return scrapeResponse
+    await redis.set(cacheKey, scrapeResponse)
+    return scrapeResponse
+  } catch (error) {
+    if (error instanceof UnsupportedSiteError) throw error
+    if (
+      error &&
+      typeof error === "object" &&
+      "message" in error &&
+      typeof error.message === "string" &&
+      error.message.toLowerCase().includes("do not support this site")
+    ) {
+      throw new UnsupportedSiteError(
+        "This site cannot be scraped. Try a different URL."
+      )
+    }
+    throw error
+  }
 }
 
 export const scrapeSiteTool = tool({

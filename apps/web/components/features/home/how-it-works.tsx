@@ -1,4 +1,4 @@
-import { Search, Zap, MessageSquare } from "lucide-react";
+import { Search, Zap, MessageSquare } from "lucide-react"
 
 const steps = [
   {
@@ -28,7 +28,7 @@ const steps = [
     accent: "varaccent-warning",
     glow: "rgba(250,204,21,0.15)",
   },
-];
+]
 
 const CornerDot = ({ position }: { position: "tl" | "tr" | "bl" | "br" }) => {
   const posClass = {
@@ -36,7 +36,7 @@ const CornerDot = ({ position }: { position: "tl" | "tr" | "bl" | "br" }) => {
     tr: "-top-[4.5px] -right-[4.5px]",
     bl: "-bottom-[4.5px] -left-[4.5px]",
     br: "-bottom-[4.5px] -right-[4.5px]",
-  }[position];
+  }[position]
 
   return (
     <div
@@ -46,18 +46,18 @@ const CornerDot = ({ position }: { position: "tl" | "tr" | "bl" | "br" }) => {
         boxShadow: "0 0 6px rgba(255,78,78,0.6)",
       }}
     />
-  );
-};
+  )
+}
 
 export function HowItWorks() {
   return (
     <section className="pb-24">
       {/* Section label */}
-      <div className="text-center mb-12">
-        <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground mb-3">
+      <div className="mb-12 text-center">
+        <p className="mb-3 text-[11px] font-bold tracking-[0.3em] text-muted-foreground uppercase">
           The Process
         </p>
-        <h2 className="text-3xl md:text-4xl font-bold uppercase tracking-tighter">
+        <h2 className="text-3xl font-bold tracking-tighter uppercase md:text-4xl">
           Three Steps to{" "}
           <span className="bg-gradient-to-r from-accent-danger via-orange-vibrant to-accent-warning bg-clip-text text-transparent">
             Brutal Clarity
@@ -68,7 +68,7 @@ export function HowItWorks() {
       {/* Card-9 double-frame container */}
       <div className="relative w-full border border-border px-4 sm:px-8 md:px-12">
         {/* Horizontal inner rails */}
-        <div className="absolute left-0 top-8 z-0 h-px w-full bg-border" />
+        <div className="absolute top-8 left-0 z-0 h-px w-full bg-border" />
         <div className="absolute bottom-8 left-0 z-0 h-px w-full bg-border" />
 
         {/* Vertical inner rails + corner dots */}
@@ -79,25 +79,27 @@ export function HowItWorks() {
           <CornerDot position="br" />
 
           {/* Content */}
-          <div className="relative z-20 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border-muted py-10">
+          <div className="divide-border-muted relative z-20 grid grid-cols-1 divide-y py-10 md:grid-cols-3 md:divide-x md:divide-y-0">
             {steps.map((step) => {
-              const Icon = step.icon;
+              const Icon = step.icon
               return (
                 <div
                   key={step.number}
-                  className="relative px-8 py-8 group"
+                  className="group relative px-8 py-8"
                   style={{ "--step-glow": step.glow } as React.CSSProperties}
                 >
                   {/* Glow on hover */}
                   <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{ background: `radial-gradient(ellipse at center, ${step.glow} 0%, transparent 70%)` }}
+                    className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                    style={{
+                      background: `radial-gradient(ellipse at center, ${step.glow} 0%, transparent 70%)`,
+                    }}
                   />
 
                   <div className="relative z-10">
                     {/* Step number */}
                     <p
-                      className="text-[11px] font-black uppercase tracking-[0.3em] mb-4"
+                      className="mb-4 text-[11px] font-black tracking-[0.3em] uppercase"
                       style={{ color: step.accent }}
                     >
                       {step.number}
@@ -105,19 +107,22 @@ export function HowItWorks() {
 
                     {/* Icon */}
                     <div
-                      className="w-10 h-10 border flex items-center justify-center mb-6"
+                      className="mb-6 flex h-10 w-10 items-center justify-center border"
                       style={{ borderColor: step.accent }}
                     >
-                      <Icon className="w-5 h-5" style={{ color: step.accent }} />
+                      <Icon
+                        className="h-5 w-5"
+                        style={{ color: step.accent }}
+                      />
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-lg font-bold uppercase tracking-tight mb-3">
+                    <h3 className="mb-3 text-lg font-bold tracking-tight uppercase">
                       {step.title}
                     </h3>
 
                     {/* Description */}
-                    <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+                    <p className="text-sm leading-relaxed font-medium text-muted-foreground">
                       {step.description}
                     </p>
 
@@ -128,11 +133,11 @@ export function HowItWorks() {
                     />
                   </div>
                 </div>
-              );
+              )
             })}
           </div>
         </div>
       </div>
     </section>
-  );
+  )
 }

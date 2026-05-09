@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server"
 import { isValidUrl, normalizeUrl, resolveRedirects } from "@/lib/url"
 import { generateHash } from "@/lib/hash"
-import { getClientKey, createRateLimitHeaders, submitRateLimit } from "@/lib/rate-limit"
+import {
+  getClientKey,
+  createRateLimitHeaders,
+  submitRateLimit,
+} from "@/lib/rate-limit"
 
 const RATE_LIMIT_LIMIT = 5
 const RATE_LIMIT_WINDOW = "1m"
@@ -29,10 +33,7 @@ export async function POST(req: Request) {
   const { url } = await req.json()
 
   if (!url || !isValidUrl(url)) {
-    return NextResponse.json(
-      { error: "Invalid URL" },
-      { status: 400, headers }
-    )
+    return NextResponse.json({ error: "Invalid URL" }, { status: 400, headers })
   }
 
   const normalizedUrl = normalizeUrl(url)

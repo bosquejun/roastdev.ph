@@ -9,7 +9,7 @@ interface RoastedErrorPageProps {
 
 export function RoastedErrorPage({ host }: RoastedErrorPageProps) {
   return (
-    <div className="flex flex-col items-center gap-6 py-16 px-8">
+    <div className="flex flex-col items-center gap-6 px-8 py-16">
       <div className="border-2 border-accent-danger p-4">
         <AlertTriangle className="h-10 w-10 text-accent-danger" />
       </div>
@@ -18,8 +18,8 @@ export function RoastedErrorPage({ host }: RoastedErrorPageProps) {
           Invalid Host
         </p>
         <p className="text-sm text-muted-foreground">
-          The host <span className="font-mono font-semibold">{host}</span> is not
-          a valid URL. Please check the address and try again.
+          The host <span className="font-mono font-semibold">{host}</span> is
+          not a valid URL. Please check the address and try again.
         </p>
       </div>
       <Link

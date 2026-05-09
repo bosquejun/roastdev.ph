@@ -1,51 +1,51 @@
-"use client";
+"use client"
 
-import React, { useId } from "react";
-import { motion, useTime, useTransform } from "motion/react";
-import { cn } from "@workspace/ui/lib/utils";
+import React, { useId } from "react"
+import { motion, useTime, useTransform } from "motion/react"
+import { cn } from "@workspace/ui/lib/utils"
 
 export interface SquigglyTextProps {
   /**
    * The text (or any node) to wrap with the squiggly effect.
    */
-  children: React.ReactNode;
-  className?: string;
-  style?: React.CSSProperties;
+  children: React.ReactNode
+  className?: string
+  style?: React.CSSProperties
   /**
    * Number of distinct displacement frames to cycle through.
    * Higher = smoother wobble, more SVG filters in the DOM.
    * @default 5
    */
-  steps?: number;
+  steps?: number
   /**
    * Time between filter swaps, in milliseconds.
    * Lower = more frantic; higher = lazier wave.
    * @default 80
    */
-  stepDuration?: number;
+  stepDuration?: number
   /**
    * Maximum displacement in px. Bigger = more squiggly.
    * Pass a single number for a constant scale, or a tuple to alternate
    * between two values per step (matches the original Lucas Bebber demo).
    * @default [6, 8]
    */
-  scale?: number | [number, number];
+  scale?: number | [number, number]
   /**
    * Turbulence base frequency. Lower values produce longer, smoother waves;
    * higher values produce tighter, jitterier noise.
    * @default 0.02
    */
-  baseFrequency?: number;
+  baseFrequency?: number
   /**
    * Number of turbulence octaves. Higher = more detailed noise.
    * @default 3
    */
-  numOctaves?: number;
+  numOctaves?: number
   /**
    * Render the wrapper as this element type.
    * @default "span"
    */
-  as?: "span" | "div";
+  as?: "span" | "div"
 }
 
 export function SquigglyText({
@@ -59,28 +59,28 @@ export function SquigglyText({
   className,
   style,
 }: SquigglyTextProps) {
-  const reactId = useId();
+  const reactId = useId()
   // useId can produce ":" / "_" which aren't valid in CSS url(#…) refs.
-  const safeId = reactId.replace(/[:_]/g, "");
-  const filterId = (i: number) => `squiggly-${safeId}-${i}`;
+  const safeId = reactId.replace(/[:_]/g, "")
+  const filterId = (i: number) => `squiggly-${safeId}-${i}`
 
   const filters = React.useMemo(
     () => Array.from({ length: steps }, (_, i) => `url(#${filterId(i)})`),
     // filterId is stable per render
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [steps, safeId],
-  );
+    [steps, safeId]
+  )
 
-  const time = useTime();
+  const time = useTime()
   const filter = useTransform(
     time,
-    (t) => filters[Math.floor(t / stepDuration) % filters.length],
-  );
+    (t) => filters[Math.floor(t / stepDuration) % filters.length]
+  )
 
   const scaleAt = (i: number) =>
-    Array.isArray(scale) ? scale[i % scale.length] : scale;
+    Array.isArray(scale) ? scale[i % scale.length] : scale
 
-  const Wrapper = as === "div" ? motion.div : motion.span;
+  const Wrapper = as === "div" ? motion.div : motion.span
 
   return (
     <Wrapper
@@ -112,5 +112,5 @@ export function SquigglyText({
       </svg>
       {children}
     </Wrapper>
-  );
+  )
 }

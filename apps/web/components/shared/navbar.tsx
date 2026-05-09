@@ -35,13 +35,13 @@ export function Navbar() {
               href="/#"
             >
               Archives
-            </Link>*/}
+            </Link>
             <Link
               href="/submit"
               className="text-sm font-bold tracking-wider uppercase transition-colors hover:text-accent-danger"
             >
               Submit
-            </Link>
+            </Link>*/}
           </div>
         </div>
         <div className="flex items-center gap-4">

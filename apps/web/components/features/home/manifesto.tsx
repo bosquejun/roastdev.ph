@@ -1,8 +1,9 @@
+import { Button } from "@workspace/ui/components/button"
 import { ArrowRight, Flame } from "lucide-react"
 
 export function Manifesto() {
   return (
-    <section className="grid items-center gap-16 border-t-1 border-border px-8 py-24 md:grid-cols-2">
+    <section className="grid items-center gap-16 border-t border-border px-4 py-16 md:grid-cols-2 md:px-8 md:py-24">
       <div>
         <h2 className="mb-8 text-3xl font-bold tracking-tighter uppercase">
           Ang Manifesto
@@ -39,13 +40,13 @@ export function Manifesto() {
         </ul>
       </div>
 
-      <div className="group relative flex aspect-video items-center justify-center overflow-hidden border-2 border-border bg-muted">
+      <div className="group relative -mx-4 flex min-h-[350px] items-center justify-center border-2 border-border bg-muted p-4">
         <img
           alt="Hall of Shame"
           className="absolute inset-0 h-full w-full object-cover opacity-30 transition-transform duration-700 group-hover:scale-105"
           src="https://lh3.googleusercontent.com/aida-public/AB6AXuBump2wxKGkUzI5l0Q7JOzaNYx0J4n-N32Y-RGVtU1mqloYRYvyx8O3CqdUaHb79BaG7oLAWLVJriKySiD3VC97-i0ZXxKHIck4LVfygTbL9BuVR1xutu9-jrcDTbguXiLWjGsrkFvqsNdVQiuPRCvrvbZlZewX5uHLCVUpLkTXs4RYZSguEp9uodRCpVk7CZJh5ycUrspYeeUi-SC9zj4-Wd14-LrbBEjbHPhSpDPIZKvcugfrYEzU6nf6eNLYZp7QL_cIHsXNx_c"
         />
-        <div className="relative z-10 border border-border bg-background/80 p-8 text-center backdrop-blur-sm">
+        <div className="relative z-10 border border-border bg-background/70 p-4 text-center backdrop-blur-sm md:p-8">
           <p className="mb-2 text-xs font-bold tracking-[0.2em] text-muted-foreground uppercase">
             Mga biktima
           </p>
@@ -59,12 +60,14 @@ export function Manifesto() {
           <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
             Real sites. Real burns. Walang nakaligtas.
           </p>
-          <button
-            type="button"
-            className="inline-flex items-center border-b-2 border-accent-warning text-xs font-bold tracking-[0.2em] text-accent-warning uppercase transition-opacity hover:opacity-70"
+          <Button
+            variant="link"
+            disabled
+            className="inline-flex items-center border-0 border-b-2 border-accent-warning text-xs font-bold tracking-[0.2em] text-accent-warning uppercase transition-opacity hover:opacity-70"
           >
-            Tingnan Mo <ArrowRight className="size-3" />
-          </button>
+            Coming Soon
+            {/*<ArrowRight className="size-3" />*/}
+          </Button>
         </div>
       </div>
     </section>

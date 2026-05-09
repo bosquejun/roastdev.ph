@@ -8,8 +8,9 @@ import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 import { SquigglyText } from "@workspace/ui/components/squiggly-text"
 import { Flame, AlertCircle, Loader2, Loader } from "lucide-react"
-import { resolveUrl, ResolveResult } from "@/app/actions/roast"
 import { RoastFormSchema, roastFormSchema } from "@/lib/schemas"
+import { TypingAnimation } from "@workspace/ui/components/typing-animation"
+import { resolveUrl } from "@/lib/url"
 
 export function LandingHero() {
   const router = useRouter()
@@ -32,10 +33,8 @@ export function LandingHero() {
     if (!isValid) return
 
     setIsResolving(true)
-    const formData = new FormData()
-    formData.set("url", urlValue)
 
-    const result = await resolveUrl(formData)
+    const result = await resolveUrl(urlValue)
 
     if (result) {
       router.push(`/roasted/${result.host}`)
@@ -46,7 +45,7 @@ export function LandingHero() {
 
   return (
     <section
-      className="relative overflow-hidden pt-24 pb-0 text-center"
+      className="relative overflow-hidden px-4 pt-24 pb-0 text-center"
       style={{
         backgroundImage: `
           linear-gradient(rgba(46,46,50,0.5) 1px, transparent 1px),
@@ -74,11 +73,16 @@ export function LandingHero() {
           </div>
         </div>
         <h1 className="mx-auto mb-8 max-w-4xl text-5xl leading-[1.1] font-bold uppercase md:text-7xl">
-          Your <span className="text-accent-danger">site</span> is probably{" "}
-          <SquigglyText stepDuration={90} scale={[6, 9]}>
-            trash
-          </SquigglyText>
-          . Let&apos;s
+          Your{" "}
+          <TypingAnimation
+            loop
+            words={["Startup", "Portfolio"]}
+            pauseDelay={5000}
+            className="text-accent-warning"
+          />{" "}
+          is probably{" "}
+          <span className="whitespace-nowrap text-accent-danger">tr🗑sh</span> .
+          Let&apos;s
           <SquigglyText stepDuration={90} scale={[6, 9]}>
             <span className="inline-block bg-gradient-to-r from-accent-danger via-orange-vibrant to-accent-warning bg-clip-text px-2 text-transparent">
               roast
@@ -96,43 +100,43 @@ export function LandingHero() {
             e.preventDefault()
             handleSubmit()
           }}
-          className="group mx-auto flex max-w-xl flex-col gap-0 md:flex-row"
+          className="mx-auto max-w-xl"
         >
-          <div className="flex-1">
+          <div className="flex flex-col gap-0 md:flex-row">
             <Input
               {...register("url")}
-              className="h-12 w-full border-2 border-border bg-card px-6 py-4 text-sm font-medium transition-colors outline-none focus:border-accent-warning focus:ring-0"
+              className="h-12 w-full border-2 border-border bg-card px-6 py-4 text-sm font-medium transition-colors outline-none focus:border-accent-warning focus:ring-0 md:border-r-0"
               placeholder="your-sh*t.com"
               type="text"
             />
-            {errors.url ? (
-              <div className="mt-2 ml-1 flex items-center gap-2 text-left text-sm font-medium text-accent-danger">
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                <span>{errors.url.message}</span>
-              </div>
-            ) : (
-              <p className="mt-2 ml-1 text-left text-xs text-muted-foreground">
-                Enter your landing page URL (e.g., your-sh*t.com)
-              </p>
-            )}
+            <Button
+              type="button"
+              onClick={handleSubmit}
+              disabled={Boolean(!isValid && urlValue) || isResolving}
+              className="hover:bg-opacity-90 h-12 w-full border-2 border-accent-danger bg-accent-danger px-8 py-4 text-sm font-bold whitespace-nowrap text-white uppercase transition-all active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-50 disabled:active:translate-y-0 md:w-auto"
+            >
+              {isResolving ? (
+                <>
+                  <Loader className="mr-2 h-4 w-4 animate-spin" />
+                  Roasting..
+                </>
+              ) : (
+                <>
+                  <Flame /> Get Roasted
+                </>
+              )}
+            </Button>
           </div>
-          <Button
-            type="button"
-            onClick={handleSubmit}
-            disabled={Boolean(!isValid && urlValue) || isResolving}
-            className="hover:bg-opacity-90 h-12 border-2 border-accent-danger bg-accent-danger px-8 py-4 text-sm font-bold whitespace-nowrap text-white uppercase transition-all active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-50 disabled:active:translate-y-0"
-          >
-            {isResolving ? (
-              <>
-                <Loader className="mr-2 h-4 w-4 animate-spin" />
-                Roasting..
-              </>
-            ) : (
-              <>
-                <Flame /> Get Roasted
-              </>
-            )}
-          </Button>
+          {errors.url ? (
+            <div className="mt-2 ml-1 flex items-center gap-2 text-left text-sm font-medium text-accent-danger">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              <span>{errors.url.message}</span>
+            </div>
+          ) : (
+            <p className="mt-2 ml-1 text-left text-xs text-muted-foreground">
+              Enter your landing page URL (e.g., your-sh*t.com)
+            </p>
+          )}
         </form>
       </div>
     </section>

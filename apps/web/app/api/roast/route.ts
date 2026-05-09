@@ -1,47 +1,64 @@
-import {
-  createUIMessageStreamResponse,
-  simulateReadableStream,
-  type UIMessageChunk,
-} from "ai"
-import { start } from "workflow/api"
-import {
-  roastStartupWorkflow,
-  ROAST_CACHE_KEY,
-} from "@/lib/workflows/roast-startup"
-import {
-  ratelimit,
-  getClientKey,
-  createRateLimitHeaders,
-} from "@/lib/rate-limit"
-
-const RATE_LIMIT_LIMIT = 1
-const RATE_LIMIT_WINDOW = "1m"
+import { createUIMessageStreamResponse } from "ai"
+import { getRun, start, WorkflowReadableStream } from "workflow/api"
+import { roastStartupWorkflow } from "@/lib/workflows/roast-startup"
+import { checkRoastRateLimit, createRateLimitHeaders } from "@/lib/rate-limit"
+import { redis } from "@/lib/redis"
 
 export async function POST(req: Request) {
-  const key = getClientKey(req)
+  const { host }: { host: string } = await req.json()
 
-  const { success, remaining, reset } = await ratelimit.limit(key)
+  const { success, remaining, reset, limit, window } =
+    await checkRoastRateLimit(req)
 
-  const headers = createRateLimitHeaders(
-    RATE_LIMIT_LIMIT,
-    RATE_LIMIT_WINDOW,
-    remaining,
-    reset,
-    success
-  )
+  const cached = await redis.get(`${host}:roasted-message`)
 
-  if (!success) {
-    return new Response("Too many requests. Please try again later.", {
-      status: 429,
-      headers,
+  if (!cached) {
+    const headers = createRateLimitHeaders(
+      limit,
+      window,
+      remaining,
+      reset,
+      success
+    )
+
+    if (!success) {
+      return new Response("Too many requests. Please try again later.", {
+        status: 429,
+        headers,
+      })
+    }
+  }
+
+  const cachedWorkflowRunId = await redis.get<string>(`${host}:workflow-run-id`)
+
+  async function startWorkflow() {
+    const run = await start(roastStartupWorkflow, [{ host }])
+
+    await redis.set(`${host}:workflow-run-id`, run.runId)
+
+    return createUIMessageStreamResponse({
+      stream: run.readable,
     })
   }
 
-  const { host }: { host: string } = await req.json()
+  if (cachedWorkflowRunId) {
+    const run = getRun(cachedWorkflowRunId)
 
-  const run = await start(roastStartupWorkflow, [{ host }])
+    const status = await run.status
 
-  return createUIMessageStreamResponse({
-    stream: run.readable,
-  })
+    console.log({ status, runId: run.runId })
+
+    if (["cancelled", "error"].includes(status)) {
+      return await startWorkflow()
+    } else {
+      console.log(`resuming workflow stream...`)
+      const readable = run.getReadable()
+
+      return createUIMessageStreamResponse({
+        stream: readable,
+      })
+    }
+  } else {
+    return await startWorkflow()
+  }
 }

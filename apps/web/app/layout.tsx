@@ -1,13 +1,11 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono, Inter, JetBrains_Mono } from "next/font/google"
+import { Geist_Mono, Inter, JetBrains_Mono } from "next/font/google"
 import localFont from "next/font/local"
 
 import "@workspace/ui/globals.css"
 
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@workspace/ui/lib/utils"
-import { Navbar } from "@/components/shared/navbar"
-import { Footer } from "@/components/shared/footer"
 import { ClerkProvider } from "@clerk/nextjs"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
@@ -97,7 +95,6 @@ export default function RootLayout({
             elements: {
               modalBackdrop: "!bg-background/50 backdrop-blur",
               cardBox: "!rounded-none",
-              footer: "!hidden",
               socialButtonsBlockButton:
                 "!rounded-none h-12 w-full !border-2 !border-card !bg-secondary px-6 py-2 !text-lg font-bold !text-white uppercase !shadow-[4px_4px_0px_0px_#2e2e32] transition-all hover:brightness-105 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none ",
               formButtonPrimary:

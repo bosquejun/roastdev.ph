@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
 import { MoveUpRight } from "lucide-react"
 import { Skeleton } from "@workspace/ui/components/skeleton"
@@ -34,14 +37,53 @@ function Favicon({
   size: number
   className: string
 }) {
+  const [error, setError] = useState(false)
+
+  if (error || !favicon) {
+    return (
+      <img
+        src={getFaviconUrl(host, size)}
+        alt="favicon"
+        className={className}
+        onError={(e) => {
+          e.currentTarget.style.display = "none"
+        }}
+      />
+    )
+  }
+
   return (
     <img
-      src={favicon || getFaviconUrl(host, size)}
+      src={favicon}
       alt="favicon"
       className={className}
       onError={(e) => {
-        e.currentTarget.src = getFaviconUrl(host, size)
+        setError(true)
       }}
+    />
+  )
+}
+
+function OgImage({ src, alt }: { src?: string; alt: string }) {
+  const [error, setError] = useState(false)
+
+  if (error || !src) {
+    return (
+      <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-muted/30 p-4 text-center">
+        <span className="text-4xl">🔪</span>
+        <p className="text-sm text-muted-foreground italic">
+          No OG image? Bold strategy — site couldn't bother
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className="h-full w-full object-cover"
+      onError={() => setError(true)}
     />
   )
 }
@@ -52,10 +94,9 @@ export function SiteMetadataCard({ host, metadata }: SiteMetadataCardProps) {
       {metadata ? (
         metadata.ogImage ? (
           <div className="relative aspect-video overflow-hidden rounded-md border border-border bg-muted">
-            <img
+            <OgImage
               src={metadata.ogImage}
               alt={metadata.ogTitle || metadata?.title || host}
-              className="h-full w-full object-cover"
             />
           </div>
         ) : (
@@ -83,12 +124,12 @@ export function SiteMetadataCard({ host, metadata }: SiteMetadataCardProps) {
                 size={32}
                 className="h-4 w-4 rounded-sm"
               />
-              <span className="text-sm font-medium text-muted-foreground truncate">
+              <span className="truncate text-sm font-medium text-muted-foreground">
                 {host}
               </span>
             </div>
             {metadata ? (
-              <h2 className="mt-1 text-xl font-bold leading-tight">
+              <h2 className="mt-1 text-xl leading-tight font-bold">
                 {metadata.ogTitle || metadata.title || host}
               </h2>
             ) : (
@@ -106,11 +147,16 @@ export function SiteMetadataCard({ host, metadata }: SiteMetadataCardProps) {
           </Link>
         </div>
         {metadata ? (
-          (metadata.ogDescription || metadata.description) ? (
+          metadata.ogDescription || metadata.description ? (
             <p className="line-clamp-2 text-sm text-muted-foreground">
               {metadata.ogDescription || metadata.description}
             </p>
-          ) : null
+          ) : (
+            <p className="line-clamp-2 text-sm text-muted-foreground italic">
+              No description? We respect the hustle of someone who just doesn't
+              care
+            </p>
+          )
         ) : (
           <Skeleton className="h-4 w-full" />
         )}
