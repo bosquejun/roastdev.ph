@@ -3,8 +3,13 @@ import { getRun, start, WorkflowReadableStream } from "workflow/api"
 import { roastStartupWorkflow } from "@/lib/workflows/roast-startup"
 import { checkRoastRateLimit, createRateLimitHeaders } from "@/lib/rate-limit"
 import { redis } from "@/lib/redis"
+import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
+  return NextResponse.json({
+    message: "Paawat ka, stop muna nganiii!",
+  })
+
   const { host }: { host: string } = await req.json()
 
   const { success, remaining, reset, limit, window } =

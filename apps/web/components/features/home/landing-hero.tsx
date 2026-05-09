@@ -105,26 +105,18 @@ export function LandingHero() {
           <div className="flex flex-col gap-0 md:flex-row">
             <Input
               {...register("url")}
-              className="h-12 w-full border-2 border-border bg-card px-6 py-4 text-sm font-medium transition-colors outline-none focus:border-accent-warning focus:ring-0 md:border-r-0"
+              disabled
+              className="h-12 w-full border-2 border-border bg-card px-6 py-4 text-sm font-medium transition-colors outline-none focus:border-accent-warning focus:ring-0 md:border-r-0 disabled:bg-muted disabled:text-muted-foreground"
               placeholder="your-sh*t.com"
               type="text"
             />
             <Button
               type="button"
               onClick={handleSubmit}
-              disabled={Boolean(!isValid && urlValue) || isResolving}
+              disabled
               className="hover:bg-opacity-90 h-12 w-full border-2 border-accent-danger bg-accent-danger px-8 py-4 text-sm font-bold whitespace-nowrap text-white uppercase transition-all active:translate-y-1 disabled:cursor-not-allowed disabled:opacity-50 disabled:active:translate-y-0 md:w-auto"
             >
-              {isResolving ? (
-                <>
-                  <Loader className="mr-2 h-4 w-4 animate-spin" />
-                  Roasting..
-                </>
-              ) : (
-                <>
-                  <Flame /> Get Roasted
-                </>
-              )}
+              <Flame /> Done for today
             </Button>
           </div>
           {errors.url ? (
