@@ -1,8 +1,11 @@
 import { SubmitStartupForm } from "@/components/features/submit/submit-startup-form"
 import { Navbar } from "@/components/shared/navbar"
 import { Footer } from "@/components/shared/footer"
+import { redirect } from "next/navigation"
 
 export default function SubmitPage() {
+  redirect("/")
+
   return (
     <div className="mx-auto max-w-xl p-8">
       <div className="mb-8">

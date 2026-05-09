@@ -18,6 +18,7 @@
     "@mendable/firecrawl-js": "^4.22.2",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.0",
+    "@vercel/analytics": "^2.0.1",
     "@workflow/ai": "^4.1.2",
     "@workspace/ui": "workspace:*",
     "ai": "^6.0.177",

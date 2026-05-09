@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Geist_Mono, Inter, JetBrains_Mono } from "next/font/google"
 import localFont from "next/font/local"
-
+import { Analytics } from "@vercel/analytics/next"
 import "@workspace/ui/globals.css"
 
 import { ThemeProvider } from "@/components/theme-provider"
@@ -84,6 +84,7 @@ export default function RootLayout({
         >
           <ThemeProvider>{children}</ThemeProvider>
         </ClerkProvider>
+        <Analytics />
       </body>
     </html>
   )
