@@ -27,49 +27,27 @@ const fontBody = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "RoastDev - Code Review with Personality",
+  title: "RoastDev PH — We'll Destroy Your Website So Your Users Don't Have To",
   description:
-    "Get brutally honest code reviews that actually help you improve. RoastDev provides AI-powered code reviews with a touch of humor while highlighting real issues and improvements.",
+    "Submit your portfolio or landing page. A Filipino senior dev, four beers deep, will tell you exactly what's wrong with it. No sugarcoating. No mercy. Tangina.",
   openGraph: {
-    title: "RoastDev - Code Review with Personality",
+    title:
+      "RoastDev PH — We'll Destroy Your Website So Your Users Don't Have To",
     description:
-      "Get brutally honest code reviews that actually help you improve. RoastDev provides AI-powered code reviews with a touch of humor while highlighting real issues and improvements.",
-    url: "https://roastdev.ph",
-    siteName: "RoastDev",
-    locale: "en_US",
+      "Submit your portfolio or landing page. A Filipino senior dev, four beers deep, will tell you exactly what's wrong with it. No sugarcoating. No mercy. Tangina.",
+    url: "https://roastdev-ph.vercel.app",
+    siteName: "RoastDev PH",
+    locale: "en_PH",
     type: "website",
-    images: [
-      {
-        url: "https://roastdev.ph/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "RoastDev - Code Review with Personality",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "RoastDev - Code Review with Personality",
+    title:
+      "RoastDev PH — We'll Destroy Your Website So Your Users Don't Have To",
     description:
-      "Get brutally honest code reviews that actually help you improve. RoastDev provides AI-powered code reviews with a touch of humor while highlighting real issues and improvements.",
-    images: ["https://roastdev.ph/og-image.png"],
+      "Submit your portfolio. A Filipino senior dev roasts it. Brutally. For free.",
   },
 }
-
-const RailCross = () => (
-  <div className="relative flex size-3 shrink-0 items-center justify-center">
-    {/* horizontal arm */}
-    <div
-      className="absolute h-px w-full"
-      style={{ background: "linear-gradient(90deg, #FF4E4E, #FACC15)" }}
-    />
-    {/* vertical arm */}
-    <div
-      className="absolute h-full w-px"
-      style={{ background: "linear-gradient(180deg, #FF4E4E, #FACC15)" }}
-    />
-  </div>
-)
 
 export default function RootLayout({
   children,
