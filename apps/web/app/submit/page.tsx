@@ -1,7 +1,5 @@
-import { SubmitStartupForm } from "@/components/features/submit/submit-startup-form"
-import { Navbar } from "@/components/shared/navbar"
-import { Footer } from "@/components/shared/footer"
 import { redirect } from "next/navigation"
+import { SubmitStartupForm } from "@/components/features/submit/submit-startup-form"
 
 export default function SubmitPage() {
   redirect("/")

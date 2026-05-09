@@ -1,15 +1,10 @@
 import { createUIMessageStreamResponse } from "ai"
-import { getRun, start, WorkflowReadableStream } from "workflow/api"
-import { roastStartupWorkflow } from "@/lib/workflows/roast-startup"
+import { getRun, start } from "workflow/api"
 import { checkRoastRateLimit, createRateLimitHeaders } from "@/lib/rate-limit"
 import { redis } from "@/lib/redis"
-import { NextResponse } from "next/server"
+import { roastStartupWorkflow } from "@/lib/workflows/roast-startup"
 
 export async function POST(req: Request) {
-  return NextResponse.json({
-    message: "Paawat ka, stop muna nganiii!",
-  })
-
   const { host }: { host: string } = await req.json()
 
   const { success, remaining, reset, limit, window } =
@@ -46,12 +41,10 @@ export async function POST(req: Request) {
     })
   }
 
-  if (cachedWorkflowRunId) {
+  if (cachedWorkflowRunId !== null) {
     const run = getRun(cachedWorkflowRunId)
 
     const status = await run.status
-
-    console.log({ status, runId: run.runId })
 
     if (["cancelled", "error"].includes(status)) {
       return await startWorkflow()

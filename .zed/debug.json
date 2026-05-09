@@ -1,0 +1,13 @@
+[
+  {
+    "label": "Debug App",
+    "adapter": "JavaScript",
+    "type": "node",
+    "request": "launch",
+    "cwd": "$ZED_WORKTREE_ROOT/apps/app",
+    "program": "$ZED_WORKTREE_ROOT/apps/app/node_modules/next/dist/bin/next",
+    "args": ["dev"],
+
+    "autoAttachChildProcesses": true
+  }
+]

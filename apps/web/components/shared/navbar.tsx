@@ -1,7 +1,5 @@
-import Link from "next/link"
-import { Button } from "@workspace/ui/components/button"
 import Image from "next/image"
-import { Show, SignUpButton, UserButton } from "@clerk/nextjs"
+import Link from "next/link"
 
 export function Navbar() {
   return (

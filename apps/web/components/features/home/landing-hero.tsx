@@ -106,7 +106,7 @@ export function LandingHero() {
             <Input
               {...register("url")}
               disabled
-              className="h-12 w-full border-2 border-border bg-card px-6 py-4 text-sm font-medium transition-colors outline-none focus:border-accent-warning focus:ring-0 md:border-r-0 disabled:bg-muted disabled:text-muted-foreground"
+              className="h-12 w-full border-2 border-border bg-card px-6 py-4 text-sm font-medium transition-colors outline-none focus:border-accent-warning focus:ring-0 disabled:bg-muted disabled:text-muted-foreground md:border-r-0"
               placeholder="your-sh*t.com"
               type="text"
             />
